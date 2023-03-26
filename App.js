@@ -16,8 +16,8 @@ export default function App() {
     return null
   }
   return (
-    <SafeAreaProvider>
-      <NavigationContainer>
+    <SafeAreaProvider style={{flex:1}}>
+      <NavigationContainer style={{flex:1}}>
         <Stack.Navigator>
           <Stack.Screen name='Home' component={Home} options={{
             headerShown:false

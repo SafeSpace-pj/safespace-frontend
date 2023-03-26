@@ -1,15 +1,11 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { StatusBar } from 'expo-status-bar'
-import { LinearGradient } from 'expo-linear-gradient';
+import Gradientcomponent from '../component/Gradient.components';
 const Home = ({navigation}) => {
   return (
     <View style={{flex:1,justifyContent:'center', alignItems:'center',backgroundColor:'#7697ff'}}>
-        <LinearGradient
-        // Background Linear Gradient
-        colors={['#7697ff','#7697ff', '#21d1ff']}
-        style={{position:'absolute',width:'100%', height:'100%'}}
-      />
+        <Gradientcomponent/>
         <View style={{backgroundColor:'white', width:130, height:130,borderRadius:100, justifyContent:'center',alignItems:'center'}}>
             <Text style={{fontSize:15, textAlign:'center', color:'#7697ff', elevation:5,fontFamily:'Poppins_700Bold' }}>Safe Space</Text>
         </View>
