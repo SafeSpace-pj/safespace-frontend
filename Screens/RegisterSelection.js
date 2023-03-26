@@ -36,7 +36,7 @@ const Register = () => {
           <View style={FormsStyles.formView}>
             <KeyboardAwareScrollView style={{width:'100%'}} showsVerticalScrollIndicator={false}>
             <View style={FormsStyles.formText}>
-              <Text style={FormsStyles.formTitle}>Sign In to Continue</Text>
+              <Text style={FormsStyles.formTitle}>Sign Up to Continue</Text>
               <Text style={FormsStyles.formsubtext}>{Error}</Text>
             </View>
             {/* input  */}
@@ -49,26 +49,30 @@ const Register = () => {
 
               <TextInput error={passworderror} contentStyle={FormsStyles.input} style={{backgroundColor:'white'}} mode='outlined' outlineColor='#000000' label='Password' autoComplete='new-password' secureTextEntry value={PAssword} onChangeText={setPAssword} />
 
+              {/* gender  */}
               <View label style={FormsStyles.radioMView}>
                 
-                <View>
+                <View style={FormsStyles.radioitem}>
                   <RadioButton value='Male' status={Gender=='Male'?'checked':'unchecked'} onPress={()=>setGender('Male')} />
-                  <Text>Male</Text>
+                  <Text style={FormsStyles.radioLabel}>Male</Text>
                 </View>
 
-                <View>
+                <View style={FormsStyles.radioitem}>
                   <RadioButton value='Female' status={Gender=='Female'?'checked':'unchecked'} onPress={()=>setGender('Female')} />
-                  <Text>Female</Text>
+                  <Text style={FormsStyles.radioLabel}>Female</Text>
                 </View>
               </View>
 
-              <TouchableOpacity>
+              {/* register */}
+              <TouchableOpacity style={FormsStyles.submitBtn}>
               <Gradientcomponent/>
-                <Text>Register</Text>
+                <Text style={FormsStyles.submitBtntxt}>Register</Text>
               </TouchableOpacity>
-              <View>
+
+              {/* reset password  */}
+              <View style={FormsStyles.ResetView}>
                 <TouchableOpacity>
-                  <Text>Reset</Text>
+                  <Text style={FormsStyles.ResetText}>Reset Password</Text>
                 </TouchableOpacity>
               </View>
             </View>

@@ -65,6 +65,33 @@ export default StyleSheet.create({
       radioMView:{
         flexDirection:'row',
         justifyContent:'space-evenly',marginBottom:10
+      },
+      radioitem:{
+        flexDirection:'row',alignItems:'center'
+      },
+      radioLabel:{
+        fontFamily:'Poppins_400Regular',
+        fontSize:11
+      },
+      submitBtn:{
+        height:40,
+        borderRadius:4,
+        overflow:'hidden',
+        alignItems:'center',
+        justifyContent:'center'
+      },
+      submitBtntxt:{
+        fontFamily:'Poppins_500Medium',
+        fontSize:12,
+        color:'white'
+      },
+      ResetView:{
+        width:'100%',
+        alignItems:'flex-end', marginTop:8
+      },
+      ResetText:{
+        fontFamily:'Poppins_400Regular',
+        fontSize:12,
       }
-      
+
 })

@@ -1,4 +1,4 @@
-import { useFonts,Poppins_400Regular, Poppins_700Bold } from '@expo-google-fonts/poppins';
+import { useFonts,Poppins_400Regular, Poppins_700Bold, Poppins_500Medium } from '@expo-google-fonts/poppins';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
@@ -11,7 +11,7 @@ import RegisterSelection from './Screens/RegisterSelection';
 
 const Stack= createNativeStackNavigator()
 export default function App() {
-  let [fontsLoaded]=useFonts({Poppins_400Regular,Poppins_700Bold})
+  let [fontsLoaded]=useFonts({Poppins_400Regular,Poppins_700Bold,Poppins_500Medium})
   if(!fontsLoaded){
     return null
   }
