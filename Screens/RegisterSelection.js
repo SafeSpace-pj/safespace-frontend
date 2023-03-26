@@ -11,7 +11,7 @@ const Register = () => {
   const [Email, setEmail] = useState('')
   const [emailerror, setEmailerror] = useState(false)
   const [PAssword, setPAssword] = useState('')
-  const [passworderror, setPassworderror] = useState(true)
+  const [passworderror, setPassworderror] = useState(false)
   const [Fullname, setFullname] = useState('')
   const [fullnameerror, setFullnameerror] = useState(false)
   const [Phonenumber, setPhonenumber] = useState('')
@@ -92,6 +92,13 @@ const Register = () => {
                 <AntDesign name="google" size={24} color="white" />
                 <Text style={[FormsStyles.submitBtntxt,{marginLeft:10}]}>Continue with Google</Text>
               </TouchableOpacity>
+              {/* reset password  */}
+              <View style={{alignItems:'center'}}>
+                <TouchableOpacity>
+                  <Text style={FormsStyles.ResetText}>Login</Text>
+                </TouchableOpacity>
+              </View>
+
             </View>
 
             </KeyboardAwareScrollView>
