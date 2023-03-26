@@ -1,10 +1,11 @@
 import { Keyboard, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { LinearGradient } from 'expo-linear-gradient'
-import { RadioButton, TextInput } from 'react-native-paper'
+import { Divider, RadioButton, TextInput } from 'react-native-paper'
 import FormsStyles from '../styles/Forms.styles'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Gradientcomponent from '../component/Gradient.components'
+import { AntDesign } from '@expo/vector-icons'
 
 const Register = () => {
   const [Email, setEmail] = useState('')
@@ -75,9 +76,27 @@ const Register = () => {
                   <Text style={FormsStyles.ResetText}>Reset Password</Text>
                 </TouchableOpacity>
               </View>
+
+              
             </View>
+
+            <Divider style={{marginVertical:20}}/>
+
+            <View style={FormsStyles.AuthView}>
+              <TouchableOpacity style={FormsStyles.AuthBtn}>
+                <AntDesign name="facebook-square" size={24} color="white" />
+                <Text style={[FormsStyles.submitBtntxt,{marginLeft:10}]}>Continue with Facebook</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={FormsStyles.AuthBtn}>
+                <AntDesign name="google" size={24} color="white" />
+                <Text style={[FormsStyles.submitBtntxt,{marginLeft:10}]}>Continue with Google</Text>
+              </TouchableOpacity>
+            </View>
+
             </KeyboardAwareScrollView>
           </View>
+          
         </View>
     </Pressable>
   )

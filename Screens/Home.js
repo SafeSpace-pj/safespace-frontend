@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
     },
     btntext:{
         fontSize:14,
-        fontFamily:'Poppins_700Bold'
+        fontFamily:'Poppins_700Bold',
+        color:'#7697ff'
     }
 })

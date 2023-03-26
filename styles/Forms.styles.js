@@ -92,6 +92,21 @@ export default StyleSheet.create({
       ResetText:{
         fontFamily:'Poppins_400Regular',
         fontSize:12,
+      },
+      
+
+      //auth View
+      AuthView:{
+        width:'100%',
+      },
+      AuthBtn:{
+        alignItems:'center',
+        justifyContent:'center',
+        backgroundColor:'#21d1ff',
+        flexDirection:'row',
+        height:40,
+        borderRadius:4,
+        marginBottom:20
       }
 
 })
