@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Home from './Screens/Home';
+import Login from './Screens/login';
 import Register from './Screens/RegisterSelection';
 import RegisterSelection from './Screens/RegisterSelection';
 // import Register from './Screens/RegisterSelection';
@@ -23,6 +24,9 @@ export default function App() {
             headerShown:false
           }} />
           <Stack.Screen name='Register' component={Register} options={{
+            headerShown:false
+          }} />
+          <Stack.Screen name='Login' component={Login} options={{
             headerShown:false
           }} />
         </Stack.Navigator>

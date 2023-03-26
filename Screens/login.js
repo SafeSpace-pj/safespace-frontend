@@ -7,16 +7,11 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Gradientcomponent from '../component/Gradient.components'
 import { AntDesign } from '@expo/vector-icons'
 
-const Register = ({navigation}) => {
+const Login = () => {
   const [Email, setEmail] = useState('')
   const [emailerror, setEmailerror] = useState(false)
   const [PAssword, setPAssword] = useState('')
   const [passworderror, setPassworderror] = useState(false)
-  const [Fullname, setFullname] = useState('')
-  const [fullnameerror, setFullnameerror] = useState(false)
-  const [Phonenumber, setPhonenumber] = useState('')
-  const [phonenumbererror, setPhonenumbererror] = useState(false)
-  const [Gender, setGender] = useState('p')
   const [Error, setError] = useState('Fill the form')
 
   return (
@@ -37,37 +32,19 @@ const Register = ({navigation}) => {
           <View style={FormsStyles.formView}>
             <KeyboardAwareScrollView style={{width:'100%'}} showsVerticalScrollIndicator={false}>
             <View style={FormsStyles.formText}>
-              <Text style={FormsStyles.formTitle}>Sign Up to Continue</Text>
+              <Text style={FormsStyles.formTitle}>Sign In to Continue</Text>
               <Text style={FormsStyles.formsubtext}>{Error}</Text>
             </View>
             {/* input  */}
             <View>
-              <TextInput error={fullnameerror} contentStyle={FormsStyles.input} style={{backgroundColor:'white'}} outlineColor='#000000' mode='outlined' label='Full-Name' autoComplete='given-name' autoFocus value={Fullname} onChangeText={setFullname} />
-
               <TextInput error={emailerror} contentStyle={FormsStyles.input} style={{backgroundColor:'white'}} mode='outlined' outlineColor='#000000' label='Email Address' autoComplete='email' keyboardType='email-address' value={Email} onChangeText={setEmail} />
               
-              <TextInput error={phonenumbererror} mode='outlined' outlineColor='#000000' label='Phone No' autoComplete='tel' keyboardType='phone-pad' value={Phonenumber} onChangeText={setPhonenumber} />
-
               <TextInput error={passworderror} contentStyle={FormsStyles.input} style={{backgroundColor:'white'}} mode='outlined' outlineColor='#000000' label='Password' autoComplete='new-password' secureTextEntry value={PAssword} onChangeText={setPAssword} />
 
-              {/* gender  */}
-              <View label style={FormsStyles.radioMView}>
-                
-                <View style={FormsStyles.radioitem}>
-                  <RadioButton value='Male' status={Gender=='Male'?'checked':'unchecked'} onPress={()=>setGender('Male')} />
-                  <Text style={FormsStyles.radioLabel}>Male</Text>
-                </View>
-
-                <View style={FormsStyles.radioitem}>
-                  <RadioButton value='Female' status={Gender=='Female'?'checked':'unchecked'} onPress={()=>setGender('Female')} />
-                  <Text style={FormsStyles.radioLabel}>Female</Text>
-                </View>
-              </View>
-
-              {/* register */}
-              <TouchableOpacity style={FormsStyles.submitBtn}>
+              {/* Login */}
+              <TouchableOpacity style={[FormsStyles.submitBtn,{marginTop:10}]}>
               <Gradientcomponent/>
-                <Text style={FormsStyles.submitBtntxt}>Register</Text>
+                <Text style={FormsStyles.submitBtntxt}>Login</Text>
               </TouchableOpacity>
 
               {/* reset password  */}
@@ -94,8 +71,8 @@ const Register = ({navigation}) => {
               </TouchableOpacity>
               {/* reset password  */}
               <View style={{alignItems:'center'}}>
-                <TouchableOpacity onPress={()=>navigation.replace('Login')}>
-                  <Text style={FormsStyles.ResetText}>Login</Text>
+                <TouchableOpacity onPress={()=>navigation.replace('Register')}>
+                  <Text style={FormsStyles.ResetText}>Register</Text>
                 </TouchableOpacity>
               </View>
 
@@ -109,5 +86,5 @@ const Register = ({navigation}) => {
   )
 }
 
-export default Register
+export default Login
 
