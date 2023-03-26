@@ -1,48 +1,77 @@
-import { Keyboard, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Keyboard, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { LinearGradient } from 'expo-linear-gradient'
-import { TextInput } from 'react-native-paper'
+import { RadioButton, TextInput } from 'react-native-paper'
 import FormsStyles from '../styles/Forms.styles'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import Gradientcomponent from '../component/Gradient.components'
 
 const Register = () => {
   const [Email, setEmail] = useState('')
+  const [emailerror, setEmailerror] = useState(false)
   const [PAssword, setPAssword] = useState('')
+  const [passworderror, setPassworderror] = useState(true)
   const [Fullname, setFullname] = useState('')
+  const [fullnameerror, setFullnameerror] = useState(false)
   const [Phonenumber, setPhonenumber] = useState('')
-  const [Gender, setGender] = useState('')
+  const [phonenumbererror, setPhonenumbererror] = useState(false)
+  const [Gender, setGender] = useState('p')
+  const [Error, setError] = useState('Fill the form')
+
   return (
     <Pressable onPress={()=>Keyboard.dismiss()} style={{flex:1, backgroundColor:'white'}}>
         <View style={FormsStyles.upper}>
-        <LinearGradient
-        // Background Linear Gradient
-        colors={['#7697ff','#7697ff', '#21d1ff']}
-        style={{position:'absolute',width:'100%', height:'100%'}}
-      />
+        <Gradientcomponent/>
         </View>
 
       {/* body  */}
         <View style={FormsStyles.body}>
         {/* titles */}
-          <View style={FormsStyles.uppertexts}>
+          <View style={[FormsStyles.uppertexts,{marginBottom:10}]}>
             <Text style={FormsStyles.upperTitle}>Safe Space</Text>
             <Text style={FormsStyles.subtitle}>Ultimate roomate finder</Text>
           </View>
 
           {/* Form */}
           <View style={FormsStyles.formView}>
-            <Text>Sign In to Continue</Text>
-            <Text>Fill the form Completely</Text>
+            <KeyboardAwareScrollView style={{width:'100%'}} showsVerticalScrollIndicator={false}>
+            <View style={FormsStyles.formText}>
+              <Text style={FormsStyles.formTitle}>Sign In to Continue</Text>
+              <Text style={FormsStyles.formsubtext}>{Error}</Text>
+            </View>
             {/* input  */}
-            <KeyboardAwareScrollView>
-              <TextInput mode='outlined' label='Full-Name' autoComplete='given-name' autoFocus value={Fullname} onChangeText={setFullname} />
+            <View>
+              <TextInput error={fullnameerror} contentStyle={FormsStyles.input} style={{backgroundColor:'white'}} outlineColor='#000000' mode='outlined' label='Full-Name' autoComplete='given-name' autoFocus value={Fullname} onChangeText={setFullname} />
 
-              <TextInput mode='outlined' label='Email Address' autoComplete='email' keyboardType='email-address' value={Email} onChangeText={setEmail} />
+              <TextInput error={emailerror} contentStyle={FormsStyles.input} style={{backgroundColor:'white'}} mode='outlined' outlineColor='#000000' label='Email Address' autoComplete='email' keyboardType='email-address' value={Email} onChangeText={setEmail} />
               
-              <TextInput mode='outlined' label='Phone No' autoComplete='tel' keyboardType='phone-pad' value={Phonenumber} onChangeText={setPhonenumber} />
+              <TextInput error={phonenumbererror} mode='outlined' outlineColor='#000000' label='Phone No' autoComplete='tel' keyboardType='phone-pad' value={Phonenumber} onChangeText={setPhonenumber} />
 
-              <TextInput mode='outlined' label='Password' autoComplete='new-password' secureTextEntry keyboardType='phone-pad' value={Phonenumber} onChangeText={setPhonenumber} />
+              <TextInput error={passworderror} contentStyle={FormsStyles.input} style={{backgroundColor:'white'}} mode='outlined' outlineColor='#000000' label='Password' autoComplete='new-password' secureTextEntry value={PAssword} onChangeText={setPAssword} />
 
+              <View label style={FormsStyles.radioMView}>
+                
+                <View>
+                  <RadioButton value='Male' status={Gender=='Male'?'checked':'unchecked'} onPress={()=>setGender('Male')} />
+                  <Text>Male</Text>
+                </View>
+
+                <View>
+                  <RadioButton value='Female' status={Gender=='Female'?'checked':'unchecked'} onPress={()=>setGender('Female')} />
+                  <Text>Female</Text>
+                </View>
+              </View>
+
+              <TouchableOpacity>
+              <Gradientcomponent/>
+                <Text>Register</Text>
+              </TouchableOpacity>
+              <View>
+                <TouchableOpacity>
+                  <Text>Reset</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
             </KeyboardAwareScrollView>
           </View>
         </View>
@@ -52,37 +81,3 @@ const Register = () => {
 
 export default Register
 
-const styles = StyleSheet.create({
-  upper:{
-    height:'40%',borderBottomRightRadius:20,borderBottomLeftRadius:20, width:'100%',backgroundColor: 'red',overflow:'hidden',
-    alignItems:'center',
-    justifyContent:'center'
-  },
-  upperTitle:{
-    color:'white',
-    fontFamily:'Poppins_700Bold',
-    fontSize:24
-  },
-  body:{
-    paddingHorizontal:'10%',
-    position:'absolute',
-    width:'100%',
-    height:'100%',
-    alignItems:'center',
-    justifyContent:'center'
-  },
-  uppertexts:{
-    alignItems:'center'
-  },
-  subtitle:{
-    fontSize:12,
-    fontFamily:'Poppins_400Regular', 
-    color:'white'
-  },
-  formView:{
-    width:'100%',backgroundColor:'white',shadowColor: '#171717',
-    shadowOffset: {width: -2, height: 4},
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-  }
-})
