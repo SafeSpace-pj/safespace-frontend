@@ -106,7 +106,8 @@ export default StyleSheet.create({
         flexDirection:'row',
         height:40,
         borderRadius:4,
-        marginBottom:20
+        marginBottom:20,
+        overflow:'hidden'
       }
 
 })

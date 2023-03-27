@@ -8,6 +8,8 @@ import Home from './Screens/Home';
 import Login from './Screens/login';
 import Register from './Screens/RegisterSelection';
 import RegisterSelection from './Screens/RegisterSelection';
+import Reset from './Screens/Reset';
+import Reset2 from './Screens/Reset2';
 // import Register from './Screens/RegisterSelection';
 
 const Stack= createNativeStackNavigator()
@@ -27,6 +29,12 @@ export default function App() {
             headerShown:false
           }} />
           <Stack.Screen name='Login' component={Login} options={{
+            headerShown:false
+          }} />
+          <Stack.Screen name='Reset1' component={Reset} options={{
+            headerShown:false
+          }} />
+          <Stack.Screen name='Reset2' component={Reset2} options={{
             headerShown:false
           }} />
         </Stack.Navigator>

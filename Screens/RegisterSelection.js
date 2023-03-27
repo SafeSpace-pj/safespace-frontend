@@ -50,33 +50,11 @@ const Register = ({navigation}) => {
 
               <TextInput error={passworderror} contentStyle={FormsStyles.input} style={{backgroundColor:'white'}} mode='outlined' outlineColor='#000000' label='Password' autoComplete='new-password' secureTextEntry value={PAssword} onChangeText={setPAssword} />
 
-              {/* gender  */}
-              <View label style={FormsStyles.radioMView}>
-                
-                <View style={FormsStyles.radioitem}>
-                  <RadioButton value='Male' status={Gender=='Male'?'checked':'unchecked'} onPress={()=>setGender('Male')} />
-                  <Text style={FormsStyles.radioLabel}>Male</Text>
-                </View>
-
-                <View style={FormsStyles.radioitem}>
-                  <RadioButton value='Female' status={Gender=='Female'?'checked':'unchecked'} onPress={()=>setGender('Female')} />
-                  <Text style={FormsStyles.radioLabel}>Female</Text>
-                </View>
-              </View>
-
               {/* register */}
-              <TouchableOpacity style={FormsStyles.submitBtn}>
+              <TouchableOpacity style={[FormsStyles.submitBtn,{marginTop:10}]}>
               <Gradientcomponent/>
                 <Text style={FormsStyles.submitBtntxt}>Register</Text>
               </TouchableOpacity>
-
-              {/* reset password  */}
-              <View style={FormsStyles.ResetView}>
-                <TouchableOpacity>
-                  <Text style={FormsStyles.ResetText}>Reset Password</Text>
-                </TouchableOpacity>
-              </View>
-
               
             </View>
 
@@ -84,11 +62,15 @@ const Register = ({navigation}) => {
 
             <View style={FormsStyles.AuthView}>
               <TouchableOpacity style={FormsStyles.AuthBtn}>
+                <Gradientcomponent/>
+
                 <AntDesign name="facebook-square" size={24} color="white" />
                 <Text style={[FormsStyles.submitBtntxt,{marginLeft:10}]}>Continue with Facebook</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={FormsStyles.AuthBtn}>
+                <Gradientcomponent/>
+
                 <AntDesign name="google" size={24} color="white" />
                 <Text style={[FormsStyles.submitBtntxt,{marginLeft:10}]}>Continue with Google</Text>
               </TouchableOpacity>

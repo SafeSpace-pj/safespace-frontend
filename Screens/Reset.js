@@ -7,7 +7,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Gradientcomponent from '../component/Gradient.components'
 import { AntDesign } from '@expo/vector-icons'
 
-const Login = ({navigation}) => {
+const Reset = ({navigation}) => {
   const [Email, setEmail] = useState('')
   const [emailerror, setEmailerror] = useState(false)
   const [PAssword, setPAssword] = useState('')
@@ -23,7 +23,7 @@ const Login = ({navigation}) => {
       {/* body  */}
         <View style={FormsStyles.body}>
         {/* titles */}
-          <View style={[FormsStyles.uppertexts,{marginBottom:10}]}>
+          <View style={[FormsStyles.uppertexts,{marginBottom:10, marginTop:'-40%'}]}>
             <Text style={FormsStyles.upperTitle}>Safe Space</Text>
             <Text style={FormsStyles.subtitle}>Ultimate roomate finder</Text>
           </View>
@@ -32,56 +32,29 @@ const Login = ({navigation}) => {
           <View style={FormsStyles.formView}>
             <KeyboardAwareScrollView style={{width:'100%'}} showsVerticalScrollIndicator={false}>
             <View style={FormsStyles.formText}>
-              <Text style={FormsStyles.formTitle}>Sign In to Continue</Text>
+              <Text style={FormsStyles.formTitle}>Reset your Password</Text>
               <Text style={FormsStyles.formsubtext}>{Error}</Text>
             </View>
             {/* input  */}
             <View>
               <TextInput error={emailerror} contentStyle={FormsStyles.input} style={{backgroundColor:'white'}} mode='outlined' outlineColor='#000000' label='Email Address' autoComplete='email' keyboardType='email-address' value={Email} onChangeText={setEmail} />
               
-              <TextInput error={passworderror} contentStyle={FormsStyles.input} style={{backgroundColor:'white'}} mode='outlined' outlineColor='#000000' label='Password' autoComplete='new-password' secureTextEntry value={PAssword} onChangeText={setPAssword} />
-
-              {/* Login */}
-              <TouchableOpacity style={[FormsStyles.submitBtn,{marginTop:10}]}>
+              {/* Reset */}
+              <TouchableOpacity onPress={()=>navigation.navigate('Reset2')} style={[FormsStyles.submitBtn,{marginTop:10}]}>
               <Gradientcomponent/>
-                <Text style={FormsStyles.submitBtntxt}>Login</Text>
+                <Text style={FormsStyles.submitBtntxt}>Reset</Text>
               </TouchableOpacity>
 
               {/* reset password  */}
-              <View style={FormsStyles.ResetView}>
-                <TouchableOpacity onPress={()=>navigation.navigate('Reset1')}>
-                  <Text style={FormsStyles.ResetText}>Reset Password</Text>
+              <View style={[FormsStyles.ResetView,{alignItems:'flex-start'}]}>
+                <TouchableOpacity onPress={()=>navigation.pop()}>
+                  <Text style={[FormsStyles.ResetText,{alignItems:'center',justifyContent:'center'}]}><AntDesign name="caretleft" size={10} color="black" />Back</Text>
                 </TouchableOpacity>
               </View>
 
               
             </View>
 
-            <Divider style={{marginVertical:20}}/>
-
-            <View style={FormsStyles.AuthView}>
-              <TouchableOpacity style={FormsStyles.AuthBtn}>
-                <Gradientcomponent/>
-
-                <AntDesign name="facebook-square" size={24} color="white" />
-                <Text style={[FormsStyles.submitBtntxt,{marginLeft:10}]}>Continue with Facebook</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={FormsStyles.AuthBtn}>
-                <Gradientcomponent/>
-
-                <AntDesign name="google" size={24} color="white" />
-                <Text style={[FormsStyles.submitBtntxt,{marginLeft:10}]}>Continue with Google</Text>
-              </TouchableOpacity>
-              {/* reset password  */}
-              <View style={{alignItems:'center'}}>
-              
-                <TouchableOpacity onPress={()=>navigation.replace('Register')}>
-                  <Text style={FormsStyles.ResetText}>Register</Text>
-                </TouchableOpacity>
-              </View>
-
-            </View>
 
             </KeyboardAwareScrollView>
           </View>
@@ -91,5 +64,5 @@ const Login = ({navigation}) => {
   )
 }
 
-export default Login
+export default Reset
 
