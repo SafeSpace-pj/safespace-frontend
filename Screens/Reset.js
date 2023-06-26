@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { Divider, RadioButton, TextInput } from 'react-native-paper'
 import FormsStyles from '../styles/Forms.styles'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import Gradientcomponent from '../component/Gradient.components'
+import Gradientcomponent from '../components/Gradient.components';
 import { AntDesign } from '@expo/vector-icons'
 
 const Reset = ({navigation}) => {
