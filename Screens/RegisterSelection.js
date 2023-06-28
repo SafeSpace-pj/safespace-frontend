@@ -90,6 +90,3 @@ const Register = ({navigation}) => {
     </Pressable>
   )
 }
-
-export default Register
-
