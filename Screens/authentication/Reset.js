@@ -6,14 +6,18 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { Divider, RadioButton, TextInput } from "react-native-paper";
 import FormsStyles from "../../styles/Forms.styles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { AntDesign } from "@expo/vector-icons";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function Reset({ navigation }) {
+
+  const { SendReset } = useContext(AuthContext)
+
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(false);
   const [Error, setError] = useState(
@@ -35,7 +39,13 @@ export default function Reset({ navigation }) {
   const hangleOnPressed = async () => {
     checkEmailValid()
 
-    navigation.navigate("Otp", { resetEmail: email })
+    const sucess = await SendReset(email.trim().toLocaleLowerCase());
+
+    if (sucess.Sent === true) {
+      return navigation.navigate("Otp", { resetEmail: email })
+    } else {
+      return setError(sucess.Error);
+    }
   }
 
   return (
@@ -93,7 +103,7 @@ export default function Reset({ navigation }) {
                 <Text style={FormsStyles.submitBtntxt}>Reset</Text>
               </TouchableOpacity>
 
-              {/* Reset */}
+              {/* Go back */}
               <TouchableOpacity
                 onPress={() => navigation.pop()}
                 style={[FormsStyles.submitBtn, { marginTop: 10, backgroundColor: "#00000011" }]}

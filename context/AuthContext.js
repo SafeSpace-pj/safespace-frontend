@@ -21,7 +21,6 @@ const AuthProvider = ({ children }) => {
           AsyncStorage.setItem("userToken", res.data.Data.Auth);
           setUserData(res.data.Data);
           setUserToken(res.data.Data.Auth);
-          console.log(userToken, userData);
         }
       })
       .catch((err) => console.log(err));
@@ -38,7 +37,6 @@ const AuthProvider = ({ children }) => {
         Fullname: Fullname,
       })
       .then((res) => {
-        console.log(res.data);
         if (res.data.Access === true && res.data.Error === false) {
           AsyncStorage.setItem("userData", JSON.stringify(res.data.Data));
           AsyncStorage.setItem("userToken", res.data.Data.Auth);
@@ -85,15 +83,65 @@ const AuthProvider = ({ children }) => {
     isAuthenticated();
   }, [userToken]);
 
-
   // Send Reset Mail
-  const SendReset = (email) => {
-    return null
-  }
+  const SendReset = async (email) => {
+    setLoading(true);
+
+    let sendResetEmailResponse;
+
+    await axios
+      .post(`${BASE_URL}/reset/1`, {
+        Email: email,
+      })
+      .then((res) => {
+        sendResetEmailResponse = res.data;
+      })
+      .catch((err) => {
+        ResetResponse = err;
+      });
+
+    setLoading(false);
+
+    return sendResetEmailResponse;
+  };
+
+  // Reset Password
+  const Reset = async (email, otp, password) => {
+    setLoading(true);
+
+    let ResetResponse;
+
+    await axios
+      .post(`${BASE_URL}/reset/2`, {
+        Email: email,
+        OTPNum: otp,
+        Password: password,
+      })
+      .then((res) => {
+        ResetResponse = res.data;
+        console.log(ResetResponse);
+      })
+      .catch((err) => {
+        ResetResponse = err;
+      });
+
+    setLoading(false);
+    
+    return ResetResponse;
+  };
 
   return (
     <AuthContext.Provider
-      value={{ Login, Logout, isLoading, userToken, Register, isAuthenticated, SendReset }}
+      value={{
+        Login,
+        Logout,
+        isLoading,
+        userToken,
+        Register,
+        isAuthenticated,
+        SendReset,
+        Reset,
+      }}
     >
       {children}
     </AuthContext.Provider>
