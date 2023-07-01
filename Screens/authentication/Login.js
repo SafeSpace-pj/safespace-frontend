@@ -15,7 +15,7 @@ import FormsStyles from "../../styles/Forms.styles";
 import { AuthContext } from "../../context/AuthContext";
 
 export default function Login({ navigation }) {
-  const { Login } = useContext(AuthContext)
+  const { Login, Notify } = useContext(AuthContext)
 
   const [formData, setFormData] = useState({
     email: "",
@@ -75,6 +75,7 @@ export default function Login({ navigation }) {
 
     Login(formData.email.toLocaleLowerCase(), formData.password)
   }
+
   return (
     <Pressable
       onPress={() => Keyboard.dismiss()}
@@ -169,15 +170,15 @@ export default function Login({ navigation }) {
             <View style={FormsStyles.AuthView}>
               {/* Auth0 buttons */}
               <View style={FormsStyles.AuthBtn}>
-                <TouchableOpacity style={FormsStyles.AuthBtnItem}>
-                  <AntDesign name="facebook-square" size={26} color="black" />
+                <TouchableOpacity  style={FormsStyles.AuthBtnItem}>
+                  <AntDesign onPress={()=>Notify("Feature unavailable or coming soon")} name="facebook-square" size={26} color="black" />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={FormsStyles.AuthBtnItem}>
+                <TouchableOpacity onPress={()=>Notify("Feature unavailable or coming soon")} style={FormsStyles.AuthBtnItem}>
                   <AntDesign name="google" size={26} color="black" />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={FormsStyles.AuthBtnItem}>
+                <TouchableOpacity onPress={()=>Notify("Feature unavailable or coming soon")} style={FormsStyles.AuthBtnItem}>
                   <AntDesign name="twitter" size={26} color="black" />
                 </TouchableOpacity>
               </View>

@@ -31,7 +31,7 @@ export default function LoadingComponents({ children }) {
         <ActivityIndicator
           animating={isLoading === true}
           size="large"
-          color="#000000"
+          color="#7472E0"
         />
       </Animated.View>
     </>

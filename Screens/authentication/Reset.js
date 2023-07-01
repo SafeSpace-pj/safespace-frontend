@@ -16,7 +16,7 @@ import { AuthContext } from "../../context/AuthContext";
 
 export default function Reset({ navigation }) {
 
-  const { SendReset } = useContext(AuthContext)
+  const { SendReset, Notify } = useContext(AuthContext)
 
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(false);
@@ -42,8 +42,10 @@ export default function Reset({ navigation }) {
     const sucess = await SendReset(email.trim().toLocaleLowerCase());
 
     if (sucess.Sent === true) {
+      Notify("Request sent sucessfully");
       return navigation.navigate("Otp", { resetEmail: email })
     } else {
+      Notify("Someting went wrong");
       return setError(sucess.Error);
     }
   }

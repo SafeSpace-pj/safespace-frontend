@@ -49,11 +49,13 @@ export default function Otp({ route, navigation }) {
   };
 
   const hangleOnPressed = async () => {
-    const sucess = await Reset( resetEmail.toLocaleLowerCase(), OTP.trim(), PAssword.trim().toLocaleLowerCase());
+    const sucess = await Reset( resetEmail.toLocaleLowerCase(), OTP.trim(), PAssword.trim());
 
     if (sucess.Sent === true) {
-      return navigation.popToTop("Login")
+      Notify("Password reset sucessfully");
+      return navigation.popToTop()
     } else {
+      Notify("Someting went wrong");
       return setError(sucess.Error);
     }
   };

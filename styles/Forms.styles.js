@@ -34,7 +34,6 @@ export default StyleSheet.create({
     fontSize: 12,
     fontFamily: "Poppins_400Regular",
     color: "white",
-    textAlign: "center",
   },
 
   //   forms
