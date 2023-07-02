@@ -1,17 +1,30 @@
-{
-  "assets": [
-    {
-      "assetId": "13424",
-      "base64": null,
-      "duration": null,
-      "exif": null,
-      "height": 1560,
-      "rotation": null,
-      "type": "image",
-      "uri": "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540kingsonseang%252FSafeSpace/ImagePicker/99f10d2a-70fd-49eb-b8f7-53a299d73b95.jpeg",
-      "width": 720
-    }
-  ],
-  "canceled": false,
-  "cancelled": false
-}
+[
+  {
+    "User": {
+      "Email": "soludorex@gmail.com",
+      "Fullname": "Adigwerex Soludo",
+      "Password": "$2b$05$MaaW.29VamI3LBGh8k.BH.AVSFp.I5am8LdKn../7f3rmnfhxcoNi",
+      "Verified1": true,
+      "Verified2": true,
+      "Verified3": true,
+      "Visible": true,
+      "__v": 0,
+      "_id": "6496296015c58265c077ab6f"
+    },
+    "profile": "https://res.cloudinary.com/drktddtbz/image/upload/v1687726210/Safespace/Profile/b6z91wzkxrdoswhod0rx.jpg"
+  },
+  {
+    "User": {
+      "Email": "soluwizy@gmail.com",
+      "Fullname": "Adigwerex Soludo",
+      "Password": "$2b$05$co5YVAKQydbJNzIg8FiAvu4CZUQ8YoZgNveKZ5AJ/mZXFl9b1MRje",
+      "Verified1": true,
+      "Verified2": true,
+      "Verified3": true,
+      "Visible": true,
+      "__v": 0,
+      "_id": "6491fcdbeb8a7b4827cf4b80"
+    },
+    "profile": "https://res.cloudinary.com/drktddtbz/image/upload/v1687567692/Safespace/Profile/lrg7zus1rxa4mir4jnhl.png"
+  }
+]

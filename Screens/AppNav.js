@@ -7,7 +7,7 @@ import LoadingComponents from "../components/Loading.components";
 
 export default function AppNav() {
   const { userToken } = useContext(AuthContext);
-
+  
   return (
     <LoadingComponents>
       <NavigationContainer>

@@ -20,8 +20,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 
 export default function Settings({ route, navigation }) {
-  const { Logout, setSwitch, getUserData, isVisible, uploadFile } = useContext(AuthContext);
-  const [image, setImage] = useState(null);
+  const { Logout, setSwitch, isLoading, isVisible, uploadFile, userData, getUserData, Notify } = useContext(AuthContext);
 
   const [isEnabled, setIsEnabled] = useState(isVisible);
 
@@ -30,9 +29,9 @@ export default function Settings({ route, navigation }) {
     setIsEnabled(isVisible)
   };
 
-  const [userData, setUserData] = useState(null);
+  const [userDetails, setUserDetails] = useState(userData);
 
-  useEffect(() => setUserData(getUserData), [getUserData]);
+  useEffect(() =>setUserDetails(userData),[isLoading, userData]);
 
   const requestGalleryPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
@@ -42,7 +41,7 @@ export default function Settings({ route, navigation }) {
     }
   };
 
-  if (userData === null) {
+  if (userDetails === null) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="small" />
@@ -83,10 +82,10 @@ export default function Settings({ route, navigation }) {
         ]}
       >
        <View style={styles.profileImage}>
-          {userData?._j?.ProfilePicture ? (
+          {userDetails?.ProfilePicture ? (
             <Image
               style={{ borderRadius: 75, width: "100%", height: "100%" }}
-              source={{ uri: userData._j.ProfilePicture }}
+              source={{ uri: userDetails?.ProfilePicture }}
             />
           ) : (
             <View
@@ -99,7 +98,7 @@ export default function Settings({ route, navigation }) {
                 alignItems: "center",
               }}
             >
-              <Text style={styles.profileLetter}>{(userData?._j?.User?.Fullname).charAt(0)}</Text>
+              <Text style={styles.profileLetter}>{(userDetails?.User?.Fullname)?.charAt(0)}</Text>
             </View>
           )}
 
@@ -129,7 +128,7 @@ export default function Settings({ route, navigation }) {
       </View>
       <View style={{ alignItems: "center", padding: 20, paddingBottom: 0 }}>
         <Text style={[AppStyles.heading, { fontSize: 16 }]}>
-        {TitleCase((userData?._j?.User?.Fullname).trim())}
+        {/* {TitleCase((userDetails?.User?.Fullname).trim())} */}
         </Text>
         <Pressable onPress={() => navigation.navigate("Profile")}>
           <Text style={[AppStyles.heading, { fontSize: 12, color: "#7472E0" }]}>
@@ -187,22 +186,33 @@ export default function Settings({ route, navigation }) {
               <SettingsButton
                 iconName="check-circle"
                 text="Verify Identity"
-                onPress={() => console.log("onVerify IdentityPress")}
+                onPress={() => {
+                  if (userDetails?.User.Verified1 !== true) {
+                    return Notify("Verfiy your email address first!")
+                  }
+                  else if (userDetails?.User.Verified2 !== true) {
+                    return navigation.navigate("VerificationStack", { screen: "Page1" })
+                  } else if (userDetails?.User.Verified3 === true) {
+                    navigation.navigate("VerificationStack", { screen: "NINUpload" })
+                  } else {
+                    return Notify("Verfication complete!")
+                  }
+                }}
               />
               <SettingsButton
                 iconName="bell"
                 text="Notifications"
-                onPress={() => console.log("Notifications")}
+                onPress={() => navigation.navigate("Notifications")}
               />
-              <SettingsButton
+              {/* <SettingsButton
                 iconName="activity"
                 text="Recent Viewed"
                 onPress={() => console.log("Recent Viewed")}
-              />
+              /> */}
               <SettingsButton
                 iconName="help-circle"
                 text="Get Help"
-                onPress={() => console.log("Get Help")}
+                onPress={() => navigation.navigate("Help")}
               />
               <SettingsButton
                 iconName="log-out"

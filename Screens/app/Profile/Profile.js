@@ -16,23 +16,79 @@ import { ActivityIndicator } from "react-native";
 import { ScrollView } from "react-native";
 import { Divider } from "react-native-paper";
 import MatchListItemComponents from "../../../components/MatchListItem.components";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import { BASE_URL } from "../../../utils/config";
+import { FlatList } from "react-native-gesture-handler";
+import { RefreshControl } from "react-native";
 
-export default function Profile() {
-  const [userData, setUserData] = useState(null);
+export default function Profile({ navigation }) {
+  const { userData, isLoading, isVisible, userToken } = useContext(AuthContext);
 
-  const { getUserData } = useContext(AuthContext);
+  const [userDetails, setUserDetails] = useState(userData);
+  const [Loading, setLoading] = useState(true);
+  const [data, setData] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => setUserData(getUserData), [getUserData]);
+  useEffect(() => setUserDetails(userData), []);
 
-  console.log(userData);
+  console.log(userDetails);
 
-  if (userData === null) {
+  if (userDetails === null) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="small" />
+        <ActivityIndicator color="#7472E0" size="small" />
       </View>
     );
   }
+
+  const onRefresh = React.useCallback(async () => {
+    setLoading(true);
+    setRefreshing(true);
+    async function getData() {
+      let config = {
+        headers: {
+          Authorization: userToken,
+        },
+      };
+
+      await axios
+        .get(`${BASE_URL}/users/contacted`, config)
+        .then((res) => {
+          if (res.data.Access === true && res.data.Error === false) {
+            setData(res.data.Data);
+            console.log(res.data.Data);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+
+    await getData();
+    setLoading(false)
+    setRefreshing(false)
+  }, []);
+
+  useEffect(() => {
+    async function getData() {
+      let config = {
+        headers: {
+          Authorization: userToken,
+        },
+      };
+
+      await axios
+        .get(`${BASE_URL}/users/contacted`, config)
+        .then((res) => {
+          if (res.data.Access === true && res.data.Error === false) {
+            setData(res.data.Data);
+            console.log(res.data.Data);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+
+    getData();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -58,10 +114,10 @@ export default function Profile() {
           Profile
         </Text>
         <View style={styles.profileImage}>
-          {userData?._j?.ProfilePicture ? (
+          {userDetails?.ProfilePicture ? (
             <Image
               style={{ borderRadius: 75, width: "100%", height: "100%" }}
-              source={{ uri: userData._j.ProfilePicture }}
+              source={{ uri: userDetails?.ProfilePicture }}
             />
           ) : (
             <View
@@ -75,12 +131,12 @@ export default function Profile() {
               }}
             >
               <Text style={styles.profileLetter}>
-                {(userData?._j?.User?.Fullname).charAt(0)}
+                {userDetails?.User?.Fullname?.charAt(0)}
               </Text>
             </View>
           )}
 
-          {userData?._j?.Verified3 ? (
+          {userDetails?.Verified3 ? (
             <View
               style={{
                 position: "absolute",
@@ -106,15 +162,15 @@ export default function Profile() {
       </View>
       <View style={{ alignItems: "center", padding: 20, paddingBottom: 0 }}>
         <Text style={[AppStyles.heading, { fontSize: 16 }]}>
-          {TitleCase((userData?._j?.User?.Fullname).trim())}
+          {TitleCase(userDetails?.User?.Fullname?.trim())}
         </Text>
         <Pressable>
           <Text style={[AppStyles.heading, { fontSize: 12, color: "#7472E0" }]}>
-            {userData?._j?.User?.Verified1 === false ? (
+            {userDetails?.User?.Verified1 === false ? (
               "Email not verified"
-            ) : userData?._j?.User?.Verified2 === false ? (
+            ) : userDetails?.User?.Verified2 === false ? (
               "Profile not set"
-            ) : userData?._j?.User?.Verified3 === true ? (
+            ) : userDetails?.User?.Verified3 === true ? (
               <Text>Edit Profile</Text>
             ) : (
               "Preference not set"
@@ -124,22 +180,27 @@ export default function Profile() {
       </View>
 
       {/* body */}
-      <ScrollView style={{ flex: 1 }}>
-        <View style={AppStyles.body}>
+      <ScrollView
+        style={{ flex: 1 }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <View style={[AppStyles.body, { flex: 1 }]}>
           {/* user profile details */}
           <View style={styles.profileDetailsContainer}>
             <View style={styles.profileDetailItem}>
               <Text style={styles.profileDetailItemLabel}>Email</Text>
               <Text style={styles.profileDetailItemText}>
-                {(userData?._j?.User?.Email).trim()}
+                {userDetails?.User?.Email?.trim()}
               </Text>
             </View>
             <Divider style={{ color: "#7472E0" }} />
             <View style={styles.profileDetailItem}>
               <Text style={styles.profileDetailItemLabel}>Location</Text>
               <Text style={styles.profileDetailItemText}>
-                {userData?._j?.Other
-                  ? (userData?._j?._j?.Other?.State).trim()
+                {userDetails?.Other
+                  ? (userDetails?.Other?.State).trim()
                   : "Location not set"}
               </Text>
             </View>
@@ -147,30 +208,62 @@ export default function Profile() {
             <View style={styles.profileDetailItem}>
               <Text style={styles.profileDetailItemLabel}>Phone No</Text>
               <Text style={styles.profileDetailItemText}>
-                {userData?._j?.Other
-                  ? (userData?._j?._j?.Other?.PhoneNo).trim()
+                {userDetails?.Other
+                  ? (userDetails?.Other?.PhoneNo).trim()
                   : "Phone number not set"}
               </Text>
             </View>
           </View>
           <View style={styles.contactedContainer}>
             <Text style={styles.contactedHeading}>Recently Contacted</Text>
-            <View
-              style={{
-                flex: 1,
-                minHeight: 200,
-                flexDirection: "column",
-                gap: 20,
-              }}
-            >
-              <MatchListItemComponents />
-              <MatchListItemComponents />
-              <MatchListItemComponents />
-              <MatchListItemComponents />
-              <MatchListItemComponents />
-              <MatchListItemComponents />
-              <MatchListItemComponents />
-            </View>
+            {/* flatlist of users */}
+            {data === null || data === undefined ? (
+              Loading === true ? (
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <ActivityIndicator size="small" color="#7472E0" />
+                </View>
+              ) : (
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>No user contacted yet</Text>
+                </View>
+              )
+            ) : !data.leght ? (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={styles.profileDetailItemText}>No user contacted yet</Text>
+              </View>
+            ) : (
+              <FlatList
+                scrollEnabled={false}
+                style={{ flex: 1 }}
+                data={data}
+                renderItem={({ item }) => (
+                  <MatchListItemComponents
+                    containerStyle={{ marginVertical: 10 }}
+                    navigation={navigation}
+                    data={item}
+                  />
+                )}
+                keyExtractor={(item) => item.User._id}
+              />
+            )}
           </View>
         </View>
       </ScrollView>
@@ -233,6 +326,7 @@ const styles = StyleSheet.create({
   contactedContainer: {
     paddingVertical: 24,
     gap: 12,
+    flex: 1,
   },
   contactedHeading: {
     fontFamily: "Poppins_600SemiBold",

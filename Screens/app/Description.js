@@ -7,33 +7,85 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import AppStyles from "../../styles/AppStyles";
 import { StatusBar } from "expo-status-bar";
 import KYCBannercomponents from "../../components/KYCBanner.components";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import { Divider } from "react-native-paper";
+import { ActivityIndicator } from "react-native";
+import { AuthContext } from "../../context/AuthContext";
+import { BASE_URL } from "../../utils/config";
+import axios from "axios";
+import formatNumberWithCommas from "../../utils/formatNumberWithCommas";
 // import { ScrollView } from "react-native-gesture-handler";
 
 export default function Description({ route, navigation }) {
   const { data } = route.params;
+  const [Loading, setLoading] = useState(true);
+  const { userToken, Notify, Contact } = useContext(AuthContext);
+
+  const [descriptorDetails, setDescriptorDetails] = useState(null);
+
+  useEffect(() => {
+    async function getData() {
+      setLoading(true);
+  
+      let config = {
+        headers: {
+          Authorization: userToken,
+        },
+      };
+  
+      await axios
+        .get(`${BASE_URL}/users/other?ref=${data}`, config)
+        .then((res) => {
+          if (res.data.Access === true && res.data.Error === false) {
+           setDescriptorDetails(res.data.Data);
+           setLoading(false);
+          }
+        }).catch((err) => console.log(err));
+  
+      setLoading(false);
+    };
+    
+    getData()
+  }, []);
+
+  const HandleContact = () => {
+    if (descriptorDetails?.Contacted === true) {
+      return Notify("User contacted previously")
+    }
+    Contact(descriptorDetails?.User?._id)
+  }
+
+  if (Loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <StatusBar style="dark" />
+        <ActivityIndicator color="#7472E0" size="small" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      <StatusBar style="light" />
+      <StatusBar style="inverted"
+      //  backgroundColor="#000000A1"
+        />
       {/* purple top banner */}
       <View style={AppStyles.upperBanner}>
         <ImageBackground
           style={AppStyles.upperBannerImage}
-          source={{ uri: data.picture.large }}
+          source={{ uri: descriptorDetails?.ProfilePicture }}
         >
-          <SafeAreaView style={{ padding: 12 }}>
+          <SafeAreaView style={{ padding: 12, paddingTop: 22 }}>
             <Pressable onPress={() => navigation.goBack()}>
               <Ionicons
                 name="ios-chevron-back-outline"
                 size={24}
-                color="#ffffff"
+                color="#7472E0"
               />
             </Pressable>
           </SafeAreaView>
@@ -49,11 +101,11 @@ export default function Description({ route, navigation }) {
         <KYCBannercomponents containerStyle={{ marginBottom: 10 }} navigator={() => navigation.navigate("Search")} />
 
         <Text style={styles.nameText}>
-          {data.name.first} {data.name.last}
+          {descriptorDetails?.User.Fullname}
         </Text>
 
         <Text style={[styles.text, { marginVertical: 12 }]}>
-          ₦ 80,000 / <Text style={styles.textInner}>per year</Text>
+         {formatNumberWithCommas(descriptorDetails?.OtherDetails?.RentBudget)} / <Text style={styles.textInner}>{descriptorDetails?.OtherDetails?.ResidenceType}</Text>
         </Text>
 
         <View
@@ -67,16 +119,16 @@ export default function Description({ route, navigation }) {
           <View style={styles.row}>
             <Ionicons name="location-sharp" size={14} color="#7472E0" />
             <Text style={styles.rowText}>
-              {data.location.city}, {data.location.state}
+            {descriptorDetails?.OtherDetails?.State}
             </Text>
           </View>
           <View style={styles.row}>
             <Entypo name="dot-single" size={24} color="#7472E0" />
-            <Text style={styles.rowText}>Anually</Text>
+            <Text style={styles.rowText}>{descriptorDetails?.OtherDetails?.ResidenceType}</Text>
           </View>
           <View style={styles.row}>
             <Entypo name="dot-single" size={24} color="#7472E0" />
-            <Text style={styles.rowText}>50/50 split</Text>
+            <Text style={styles.rowText}>{descriptorDetails?.OtherDetails?.RentSplit}</Text>
           </View>
         </View>
 
@@ -86,10 +138,7 @@ export default function Description({ route, navigation }) {
           <View style={styles.subGroup}>
             <Text style={styles.subHeading}>Description</Text>
             <Text style={styles.subText}>
-              1 big hall room for rent at lalitpur, ktm with the facilities of
-              bike parking and tap water . it offers 1 bedroom,and a 1 common
-              bathroom for whole flat. It is suitable for student only. Price is
-              negotiable for student only.
+            {descriptorDetails?.OtherDetails?.Bio}
             </Text>
           </View>
           <View style={styles.subGroup}>
@@ -104,21 +153,21 @@ export default function Description({ route, navigation }) {
             >
               <View style={styles.row}>
                 <Ionicons name="md-checkmark" size={24} color="#7472E0" />
-                <Text style={styles.rowText}>Male</Text>
+                <Text style={styles.rowText}>{descriptorDetails?.OtherDetails?.Gender}</Text>
               </View>
               <View style={styles.row}>
                 <Ionicons name="md-checkmark" size={24} color="#7472E0" />
-                <Text style={styles.rowText}>2 Bedroom apartment</Text>
+                <Text style={styles.rowText}>Earns {descriptorDetails?.OtherDetails?.IncomeMonthly}</Text>
               </View>
               <View style={styles.row}>
                 <Ionicons name="md-checkmark" size={24} color="#7472E0" />
-                <Text style={styles.rowText}>Employed</Text>
+                <Text style={styles.rowText}>{descriptorDetails?.OtherDetails?.Occupation}</Text>
               </View>
             </View>
           </View>
 
-          <Pressable style={AppStyles.contactButton}>
-              <Text style={AppStyles.contactButtonText}>Contact now</Text>
+          <Pressable onPress={HandleContact} style={AppStyles.contactButton}>
+              <Text style={[AppStyles.contactButtonText, descriptorDetails?.Contacted === true && { opacity: 0.5 }]}>Contact now</Text>
             </Pressable>
           <View
             style={{

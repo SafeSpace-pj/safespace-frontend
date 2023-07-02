@@ -3,46 +3,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Image } from "react-native";
 import { Entypo, Ionicons } from "@expo/vector-icons";
+import TitleCase from "../utils/TitleCase";
 
-export default function MatchListItemComponents({ navigation }) {
-  const [data, setData] = useState({
-    cell: "687-685-697",
-    dob: { age: 25, date: "1998-02-09T08:26:10.657Z" },
-    email: "noelia.herrero@example.com",
-    gender: "female",
-    id: { name: "DNI", value: "19021255-C" },
-    location: {
-      city: "Asokoro",
-      coordinates: { latitude: "-32.1184", longitude: "148.5367" },
-      country: "Nigeria",
-      postcode: 87375,
-      state: "Abuja",
-      street: { name: "Avenida de Castilla", number: 3284 },
-      timezone: {
-        description: "Western Europe Time, London, Lisbon, Casablanca",
-        offset: "0:00",
-      },
-    },
-    login: {
-      md5: "dd95b480609d4441ea6f313e70ecb963",
-      password: "1994",
-      salt: "J4QX0Rc9",
-      sha1: "22a01da3635d684d28eb863f22f72a1325583336",
-      sha256:
-        "2c7031096d4f2959b1b201ba89970e55eb44651fc319e9da9dad8627aefbdb8d",
-      username: "yellowcat840",
-      uuid: "b68751c8-d9ea-4cfb-8f0f-2dff5821116c",
-    },
-    name: { first: "Noelia", last: "Herrero", title: "Mrs" },
-    nat: "ES",
-    phone: "951-010-384",
-    picture: {
-      large: "https://randomuser.me/api/portraits/women/34.jpg",
-      medium: "https://randomuser.me/api/portraits/med/women/34.jpg",
-      thumbnail: "https://randomuser.me/api/portraits/thumb/women/34.jpg",
-    },
-    registered: { age: 1, date: "2021-07-11T03:57:54.351Z" },
-  });
+export default function MatchListItemComponents({ navigation, containerStyle, data }) {
 
   if (data === null) {
     return <Text>Loading...</Text>;
@@ -50,13 +13,13 @@ export default function MatchListItemComponents({ navigation }) {
 
   return (
     <Pressable
-      onPress={() => navigation.navigate("Description", { data: data })}
-      style={styles.container}
+      onPress={() => navigation.navigate("Description", { data: data?.User?._id })}
+      style={[styles.container, containerStyle]}
     >
-      <Image style={styles.image} source={{ uri: data.picture.large }} />
+      <Image style={styles.image} source={{ uri: data?.profile }} />
       <View style={styles.column}>
         <Text style={styles.nameText}>
-          {data.name.first} {data.name.last}
+          {TitleCase(data?.User?.Fullname)}
         </Text>
         <Text style={styles.text}>
           ₦ 80,000 / <Text style={styles.textInner}>per year</Text>
@@ -65,7 +28,7 @@ export default function MatchListItemComponents({ navigation }) {
           <View style={styles.row}>
             <Ionicons name="location-sharp" size={14} color="#7472E0" />
             <Text style={styles.rowText}>
-              {data.location.city}, {data.location.state}
+              Asokoro, Abuja
             </Text>
           </View>
           <View style={styles.row}>

@@ -8,7 +8,7 @@ export const AuthContext = React.createContext();
 
 const AuthProvider = ({ children }) => {
   const [isLoading, setLoading] = React.useState(false);
-  const [isVisible, setVisibility] = React.useState(false);
+  const [isVisible, setVisibility] = React.useState(null);
   const [userToken, setUserToken] = React.useState(null);
   const [userData, setUserData] = React.useState(null);
 
@@ -31,17 +31,38 @@ const AuthProvider = ({ children }) => {
     setLoading(true);
     await axios
       .post(`${BASE_URL}/login`, { Email: Email, Password: Password })
-      .then((res) => {
+      .then(async (res) => {
         if (res.data.Access === true && res.data.Error === false) {
-          AsyncStorage.setItem("userData", JSON.stringify(res.data.Data));
+          // AsyncStorage.setItem("userData", JSON.stringify(res.data.Data));
           AsyncStorage.setItem("userToken", res.data.Data.Auth);
-          AsyncStorage.setItem(
-            "Visibility",
-            res.data.Data.User.Visible.toString()
-          );
-          setUserData(res.data.Data);
+          // AsyncStorage.setItem(
+          //   "Visibility",
+          //   res.data.Data.User.Visible.toString()
+          // );
+          // setUserData(res.data.Data);
           setUserToken(res.data.Data.Auth);
-          setVisibility(res.data.Data.User.Visible);
+          // setVisibility(res.data.Data.User.Visible);
+
+          let config = {
+            headers: {
+              Authorization: userToken,
+            },
+          };
+
+          await axios.get(`${BASE_URL}/users/i`, config).then(async (res) => {
+            if (res.data.Access === true && res.data.Error === false) {
+              await AsyncStorage.setItem(
+                "userData",
+                JSON.stringify(res.data.Data)
+              );
+              await AsyncStorage.setItem(
+                "Visibility",
+                res.data.Data.User.Visible.toString()
+              );
+              await setUserData(res.data.Data);
+              await setVisibility(res.data.Data.User.Visible);
+            }
+          });
           return Notify("Signed in sucessfully");
         }
         Notify(res.data.Error);
@@ -87,9 +108,7 @@ const AuthProvider = ({ children }) => {
   const Logout = async () => {
     await setLoading(true);
     await setUserToken(null);
-    await AsyncStorage.removeItem("userToken");
-    await AsyncStorage.removeItem("userData");
-    AsyncStorage.removeItem("Visibility");
+    await AsyncStorage.multiRemove(["userToken", "userData", "Visibility"]);
     setVisibility(null);
     await setUserToken(null);
     setLoading(false);
@@ -122,7 +141,20 @@ const AuthProvider = ({ children }) => {
 
   // get user data
   const getUserData = async () => {
-    return userData;
+    let usersDetialResponse;
+
+    let config = {
+      headers: {
+        Authorization: userToken,
+      },
+    };
+
+    await axios.get(`${BASE_URL}/users/i`, config).then((res) => {
+      if (res.data.Access === true && res.data.Error === false) {
+        AsyncStorage.setItem("userData", JSON.stringify(res.data.Data));
+        setUserData(res.data.Data);
+      }
+    });
   };
 
   // switch current user visibility
@@ -136,6 +168,8 @@ const AuthProvider = ({ children }) => {
         Authorization: userToken,
       },
     };
+
+    console.log(userData);
 
     await axios
       .get(`${BASE_URL}/users/switch`, config)
@@ -155,6 +189,7 @@ const AuthProvider = ({ children }) => {
           await setVisibility(setSwitchResponse.Switch);
           Notify("Visibility changed successfully");
         } else {
+          setVisibility(previousState);
           Notify(setSwitchResponse.Error);
         }
       })
@@ -184,6 +219,8 @@ const AuthProvider = ({ children }) => {
       });
 
     setLoading(false);
+
+    console.log(sendResetEmailResponse);
 
     return sendResetEmailResponse;
   };
@@ -240,13 +277,8 @@ const AuthProvider = ({ children }) => {
         },
       };
 
-
       await axios
-        .post(
-          `${BASE_URL}/upload/profileupload`,
-          formData,
-          config1
-        )
+        .post(`${BASE_URL}/upload/profileupload`, formData, config1)
         .then(async (res) => {
           if (res.data.Access === true && res.data.Error === false) {
             await axios.get(`${BASE_URL}/users/i`, config).then((res) => {
@@ -255,7 +287,6 @@ const AuthProvider = ({ children }) => {
                 setUserData(res.data.Data);
               }
             });
-            console.log(res.data);
             return Notify("Profile photo updated sucessfully");
           }
           Notify(res.data.Error);
@@ -269,6 +300,57 @@ const AuthProvider = ({ children }) => {
     }
 
     setLoading(false);
+  };
+
+  const Contact = async (data) => {
+    let config = {
+      headers: {
+        Authorization: userToken,
+      },
+    };
+
+    await axios
+      .post(`${BASE_URL}/contact`, { ContactID: data }, config)
+      .then(async (res) => {
+        if (res.data.Access === true && res.data.Error === false && res.data.Contact === true) {
+          return Notify("User contacted sucessfully");
+        } else if (res.data.Access === true && res.data.Error !== false) {
+          return Notify("Update your profile to use this feature");
+        }
+        Notify(res.data.Error);
+      })
+      .catch((err) => {
+        Notify("Someting went wrong");
+        console.log(err);
+      });
+  };
+
+  const EditProfile = async (data) => {
+    let config = {
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        Authorization: userToken,
+      },
+    };
+
+    await axios
+      .post(`${BASE_URL}/upload/editProfile`, data, config)
+      .then(async (res) => {
+        if (res.data.Access === true && res.data.Error === false) {
+          console.log(res.data);
+          await axios.get(`${BASE_URL}/users/i`, config).then(async (res) => {
+            if (res.data.Access === true && res.data.Error === false) {
+              await AsyncStorage.setItem("userData", JSON.stringify(res.data.Data));
+              console.log(res.data.Data);
+              await setUserData(res.data.Data);
+            }
+          });
+          setLoading(false);
+          Notify("Profile updated successfully add your NIN to complete your profile!");
+        }
+        return Notify(res.data.Error)
+      })
+      .catch((err) => {return Notify(err)});
   };
 
   return (
@@ -287,6 +369,10 @@ const AuthProvider = ({ children }) => {
         setSwitch,
         isVisible,
         uploadFile,
+        userData,
+        Contact,
+        setLoading,
+        EditProfile,
       }}
     >
       {children}

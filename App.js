@@ -5,6 +5,7 @@ import {
   Poppins_700Bold,
   Poppins_500Medium,
   Poppins_800ExtraBold,
+  Poppins_400Regular_Italic,
 } from "@expo-google-fonts/poppins";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -19,6 +20,7 @@ export default function App() {
     Poppins_700Bold,
     Poppins_500Medium,
     Poppins_800ExtraBold,
+    Poppins_400Regular_Italic,
   });
   if (!fontsLoaded) {
     return null;
