@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { KeyboardAvoidingView, StyleSheet, Text, View } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import DropdownElement from "../../components/DropdownElement.components";
 import AppStyles from "../../styles/AppStyles";
@@ -52,25 +52,25 @@ export default function Page1({ navigation }) {
     });
   };
 
-  const setBudgetValue = (val) => {
-    setBudget(val)
-    // let newVal = parseInt(val).toLocaleString();
+  // const setBudgetValue = (val) => {
+  //   setBudget(val)
+  //   // let newVal = parseInt(val).toLocaleString();
 
-    // newVal = newVal.toString()
+  //   // newVal = newVal.toString()
 
-    setBudget(val)
+  //   setBudget(val)
 
-    let newVal = formatNumberWithCommas(val)
+  //   let newVal = formatNumberWithCommas(val)
 
-    setFormatedValue(newVal)
+  //   setFormatedValue(newVal)
 
-    // if (newVal === "NaN") {
-    //   console.log("Nan value present");
-    //   setFormatedValue("")
-    // } else {
-    //   setFormatedValue(newVal)
-    // }
-  }
+  //   // if (newVal === "NaN") {
+  //   //   console.log("Nan value present");
+  //   //   setFormatedValue("")
+  //   // } else {
+  //   //   setFormatedValue(newVal)
+  //   // }
+  // }
 
   return (
     <View style={styles.container}>
@@ -153,7 +153,7 @@ export default function Page1({ navigation }) {
             <TextInput
               placeholder="Bio"
               placeholderTextColor="black"
-              style={[styles.placeholderStyle, { textAlignVertical: "top", paddingVertical: 10 }]}
+              style={[styles.placeholderStyle, { textAlignVertical: "top", paddingVertical: 10, flex: 1 }]}
               cursorColor="black"
               value={bio}
               onChangeText={(val) => setBio(val)}
@@ -207,8 +207,8 @@ export default function Page1({ navigation }) {
               placeholderTextColor="black"
               style={styles.placeholderStyle}
               cursorColor="black"
-              value={formatedValue}
-              onChangeText={(val) => setBudgetValue(val)}
+              value={budget}
+              onChangeText={(val) => setBudget(val.toString())}
               keyboardType="number-pad"
               maxLength={13}
             />
@@ -264,6 +264,8 @@ export default function Page1({ navigation }) {
               1/4 NEXT
             </Text>
           </TouchableOpacity>
+
+          <KeyboardAvoidingView />
         </ScrollView>
       </View>
     </View>

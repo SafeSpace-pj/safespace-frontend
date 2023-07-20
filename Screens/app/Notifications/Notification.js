@@ -1,12 +1,16 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
-import AppStyles from "../../styles/AppStyles";
 import { Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { ScrollView } from "react-native";
-import NotificationsItem from "../../components/NotificationsItem.components";
+import AppStyles from "../../../styles/AppStyles";
 
-export default function Notifications({ navigation }) {
+export default function Notification(props) {
+  const {
+    route: {
+      params: { Body, Status, Title, updatedAt },
+    },
+    navigation,
+  } = props;
+
   return (
     <View style={styles.container}>
       <View
@@ -41,7 +45,7 @@ export default function Notifications({ navigation }) {
               fontSize: 22,
             }}
           >
-            Notifications
+            Notification
           </Text>
           <Ionicons
             name="ios-chevron-back-outline"
@@ -56,36 +60,32 @@ export default function Notifications({ navigation }) {
       <View style={{ flex: 1, padding: 24 }}>
         <View
           style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "baseline",
             paddingVertical: 14,
+            gap: 8,
           }}
         >
-          <Text style={{ fontFamily: "Poppins_500Medium", fontSize: 15 }}>
-            All messages
+          <Text style={{ fontFamily: "Poppins_500Medium", fontSize: 18 }}>
+            {Title}
           </Text>
-          <Pressable>
-            <Text
-              style={{
-                fontFamily: "Poppins_400Regular",
-                fontSize: 12,
-                color: "#00000080",
-              }}
-            >
-              Mark all read
-            </Text>
-          </Pressable>
+          <Text
+            style={{
+              fontFamily: "Poppins_400Regular",
+              fontSize: 15,
+              color: "#00000090",
+            }}
+          >
+            {Body}
+          </Text>
+          <Text
+            style={{
+              fontFamily: "Poppins_400Regular",
+              fontSize: 12,
+              color: "#00000080",
+            }}
+          >
+            {Date(updatedAt)}
+          </Text>
         </View>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          bounces={true}
-          alwaysBounceVertical={true}
-          style={{ flex: 1 }}
-          contentContainerStyle={{ gap: 12 }}
-        >
-          <NotificationsItem />
-        </ScrollView>
       </View>
     </View>
   );

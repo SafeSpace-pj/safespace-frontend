@@ -29,6 +29,10 @@ const AuthProvider = ({ children }) => {
   // Login a user
   const Login = async (Email, Password) => {
     setLoading(true);
+    setUserData(null)
+    setUserToken(null)
+    setVisibility(null)
+    await AsyncStorage.multiRemove(["userToken", "userData", "Visibility"]);
     await axios
       .post(`${BASE_URL}/login`, { Email: Email, Password: Password })
       .then(async (res) => {
@@ -51,6 +55,7 @@ const AuthProvider = ({ children }) => {
 
           await axios.get(`${BASE_URL}/users/i`, config).then(async (res) => {
             if (res.data.Access === true && res.data.Error === false) {
+              console.log(res.data);
               await AsyncStorage.setItem(
                 "userData",
                 JSON.stringify(res.data.Data)
@@ -83,18 +88,9 @@ const AuthProvider = ({ children }) => {
         Password: Password,
         Fullname: Fullname,
       })
-      .then((res) => {
+      .then(async (res) => {
         if (res.data.Access === true && res.data.Error === false) {
-          AsyncStorage.setItem("userData", JSON.stringify(res.data.Data));
-          AsyncStorage.setItem("userToken", res.data.Data.Auth);
-          AsyncStorage.setItem(
-            "Visibility",
-            res.data.Data.User.Visible.toString()
-          );
-          setUserData(res.data.Data);
-          setUserToken(res.data.Data.Auth);
-          setVisibility(res.data.Data.User.Visible);
-          Notify("Account created sucessfully");
+          await Notify("Account created sucessfully, login to get started!");
         }
       })
       .catch((err) => {
@@ -109,7 +105,7 @@ const AuthProvider = ({ children }) => {
     await setLoading(true);
     await setUserToken(null);
     await AsyncStorage.multiRemove(["userToken", "userData", "Visibility"]);
-    setVisibility(null);
+    await setVisibility(null);
     await setUserToken(null);
     setLoading(false);
     Notify("Logged out sucessfully");
@@ -168,8 +164,6 @@ const AuthProvider = ({ children }) => {
         Authorization: userToken,
       },
     };
-
-    console.log(userData);
 
     await axios
       .get(`${BASE_URL}/users/switch`, config)
@@ -302,6 +296,60 @@ const AuthProvider = ({ children }) => {
     setLoading(false);
   };
 
+ // upload profile picture
+ const uploadNIN = async (uri, number) => {
+  setLoading(true);
+  try {
+    const fileUri = uri;
+    const formData = new FormData();
+
+    formData.append("Ninimage", {
+      uri: fileUri,
+      name: "NIN",
+      type: "application/octet-stream", // Modify the type based on your server requirements
+    });
+
+    formData.append("Nin", parseInt(number));
+
+    let config = {
+      headers: {
+        Authorization: userToken,
+      },
+    };
+
+    let config1 = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: userToken,
+      },
+    };
+
+    await axios
+      .post(`${BASE_URL}/upload/nin`, formData, config1)
+      .then(async (res) => {
+        if (res.data.Access === true && res.data.Error === false) {
+          await axios.get(`${BASE_URL}/users/i`, config).then((res) => {
+            if (res.data.Access === true && res.data.Error === false) {
+              AsyncStorage.setItem("userData", JSON.stringify(res.data.Data));
+              setUserData(res.data.Data);
+            }
+          });
+          return Notify("Congtatulations, KYC completed sucessfully");
+        }
+        Notify(res.data.Error);
+      })
+      .catch((err) => {
+        Notify("Someting went wrong");
+        console.log(err);
+      });
+  } catch (error) {
+    console.log(`isAuthenticated in error state: ${error}`);
+  }
+
+  setLoading(false);
+};
+
+  // contact another user
   const Contact = async (data) => {
     let config = {
       headers: {
@@ -312,10 +360,9 @@ const AuthProvider = ({ children }) => {
     await axios
       .post(`${BASE_URL}/contact`, { ContactID: data }, config)
       .then(async (res) => {
-        if (res.data.Access === true && res.data.Error === false && res.data.Contact === true) {
+        console.log(res.data);
+        if (res.data.Access === true && res.data.Error !== true) {
           return Notify("User contacted sucessfully");
-        } else if (res.data.Access === true && res.data.Error !== false) {
-          return Notify("Update your profile to use this feature");
         }
         Notify(res.data.Error);
       })
@@ -325,11 +372,11 @@ const AuthProvider = ({ children }) => {
       });
   };
 
+  // edit profile
   const EditProfile = async (data) => {
     let config = {
       headers: {
-        "Content-Type": "application/json; charset=utf-8",
-        Authorization: userToken,
+        authorization: userToken,
       },
     };
 
@@ -346,7 +393,7 @@ const AuthProvider = ({ children }) => {
             }
           });
           setLoading(false);
-          Notify("Profile updated successfully add your NIN to complete your profile!");
+          return Notify("Profile updated successfully add your NIN to complete your profile!");
         }
         return Notify(res.data.Error)
       })
@@ -373,6 +420,7 @@ const AuthProvider = ({ children }) => {
         Contact,
         setLoading,
         EditProfile,
+        uploadNIN
       }}
     >
       {children}

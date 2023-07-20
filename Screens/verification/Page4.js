@@ -70,6 +70,27 @@ export default function Page4({ route, navigation }) {
       return Notify("Fill form acordingly");
     }
 
+    const lvHabits = livingHabits === true ? "LivingHabit" : "NoLivingHabit";
+    const clHabits = cleanHabits === true ? "Chores" : "NoChores";
+    const pSpace = personalSpace === true ? "PersonalSpace" : "NoPersonalSpace";
+    const shResp =
+      sharedResp === true ? "SharedResponsibility" : "NoSharedResponsibility";
+    const nise = niose === true ? "Noise" : "NoNoise";
+    const fd = food === true ? "FoodKitchen" : "NoFoodKitchen";
+    const grnPract =
+      greenPract === true ? "GreenPractices" : "NoGreenPractices";
+    const gst = guest === true ? "Guests" : "NoGuests";
+    const commtn =
+      communication === true
+        ? "CommunicationConflict"
+        : "NoCommunicationConflict";
+    const rotns = routines === true ? "PersonalRoutines" : "NoPersonalRoutines";
+    const pts = pets === true ? "PetsAllergies" : "NoPetsAllergies";
+    const stdy = study === true ? "StudyWorks" : "NoStudyWorks";
+    const clmte =
+      climate === true ? "ClimateTemprature" : "NoClimateTemprature";
+    const homDr = homeDecor === true ? "HomeDecore" : "NoHomeDecore";
+
     const data = {
       Beneficiary: {
         Email: email,
@@ -94,33 +115,29 @@ export default function Page4({ route, navigation }) {
         IncomeMonthly: roomieIncome,
         Gender: roomieGender,
         Questions: [
-          livingHabits === true ? "LivingHabit" : "NoLivingHabit",
-          cleanHabits === true ? "Chores" : "NoChores",
-          personalSpace === true ? "PersonalSpace" : "NoPersonalSpace",
-          sharedResp === true
-            ? "SharedResponsibility"
-            : "NoSharedResponsibility",
-          niose === true ? "Noise" : "NoNoise",
-          food === true ? "FoodKitchen" : "NoFoodKitchen",
-          greenPract === true ? "GreenPractices" : "NoGreenPractices",
-          guest === true ? "Guests" : "NoGuests",
-          communication === true
-            ? "CommunicationConflict"
-            : "NoCommunicationConflict",
-          routines === true ? "PersonalRoutines" : "NoPersonalRoutines",
-          pets === true ? "PetsAllergies" : "NoPetsAllergies",
-          study === true ? "StudyWorks" : "NoStudyWorks",
-          cleanHabits === true ? "ClimateTemprature" : "NoClimateTemprature",
-          homeDecor === true ? "HomeDecore" : "NoHomeDecore",
+          lvHabits,
+          clHabits,
+          pSpace,
+          shResp,
+          nise,
+          fd,
+          grnPract,
+          gst,
+          commtn,
+          rotns,
+          pts,
+          stdy,
+          clmte,
+          homDr,
         ],
       },
     };
 
-    EditProfile(data)
+    EditProfile(data);
 
     // const popAction = StackActions.pop(4);
     const popAction = StackActions.popToTop();
-    return navigation.dispatch(popAction)
+    return navigation.dispatch(popAction);
   };
 
   // setLoading(false);

@@ -11,7 +11,7 @@ import VerificationStack from './VerificationStack'
 
 import { Ionicons } from "@expo/vector-icons";
 import Help from "./app/Help";
-import Notifications from "./app/Notifications";
+import NotificationsStack from "./NotificationsStack";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -29,7 +29,7 @@ export default function AppStack() {
       <Stack.Screen name="SearchDetails" component={SearchDetails} />
       <Stack.Screen name="VerificationStack" component={VerificationStack} />
       <Stack.Screen name="Help" component={Help} />
-      <Stack.Screen name="Notifications" component={Notifications} />
+      <Stack.Screen name="NotificationsStack" component={NotificationsStack} />
     </Stack.Navigator>
   );
 }

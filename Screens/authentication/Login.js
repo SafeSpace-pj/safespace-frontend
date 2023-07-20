@@ -68,7 +68,6 @@ export default function Login({ navigation }) {
 
   const ButtonAction = () => {
     // Extra validation in case any fails somehow 🤷‍♂️
-    console.log(formData);
 
     checkEmailValid()
     checkPasswordLenght()
@@ -120,7 +119,7 @@ export default function Login({ navigation }) {
                 onChangeText={(text) =>
                   setFormData({
                     ...formData,
-                    email: text,
+                    email: text.toLocaleLowerCase(),
                   })
                 }
                 onEndEditing={checkEmailValid}

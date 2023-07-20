@@ -23,18 +23,40 @@ import { FlatList } from "react-native-gesture-handler";
 import { RefreshControl } from "react-native";
 
 export default function Profile({ navigation }) {
-  const { userData, isLoading, isVisible, userToken } = useContext(AuthContext);
+  const { userData, isLoading, isVisible, userToken, getUserData } =
+    useContext(AuthContext);
 
-  const [userDetails, setUserDetails] = useState(userData);
   const [Loading, setLoading] = useState(true);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => setUserDetails(userData), []);
+  console.log(userData);
 
-  console.log(userDetails);
+  useEffect(() => {
+    getUserData()
+    setLoading(true)
+    async function getData() {
+      let config = {
+        headers: {
+          Authorization: userToken,
+        },
+      };
 
-  if (userDetails === null) {
+      await axios
+        .get(`${BASE_URL}/users/contacted`, config)
+        .then((res) => {
+          if (res.data.Access === true && res.data.Error === false) {
+            setData(res.data.Data);
+          }
+        })
+        .catch((err) => console.error(err));
+    }
+
+    getData();
+    setLoading(false)
+  }, []);
+
+  if (userData === null) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator color="#7472E0" size="small" />
@@ -42,49 +64,29 @@ export default function Profile({ navigation }) {
     );
   }
 
-  const onRefresh = React.useCallback(async () => {
-    setLoading(true);
+  const onRefresh = React.useCallback(() => {
+    
+    async function getData() {
+      setLoading(true);
     setRefreshing(true);
-    async function getData() {
+
       let config = {
         headers: {
           Authorization: userToken,
         },
-      };
+      }
 
       await axios
         .get(`${BASE_URL}/users/contacted`, config)
         .then((res) => {
           if (res.data.Access === true && res.data.Error === false) {
             setData(res.data.Data);
-            console.log(res.data.Data);
           }
         })
-        .catch((err) => console.log(err));
-    }
+        .catch((err) => console.error(err));
 
-    await getData();
-    setLoading(false)
-    setRefreshing(false)
-  }, []);
-
-  useEffect(() => {
-    async function getData() {
-      let config = {
-        headers: {
-          Authorization: userToken,
-        },
-      };
-
-      await axios
-        .get(`${BASE_URL}/users/contacted`, config)
-        .then((res) => {
-          if (res.data.Access === true && res.data.Error === false) {
-            setData(res.data.Data);
-            console.log(res.data.Data);
-          }
-        })
-        .catch((err) => console.log(err));
+        setLoading(false);
+        setRefreshing(false);
     }
 
     getData();
@@ -114,10 +116,10 @@ export default function Profile({ navigation }) {
           Profile
         </Text>
         <View style={styles.profileImage}>
-          {userDetails?.ProfilePicture ? (
+          {userData?.ProfilePicture ? (
             <Image
               style={{ borderRadius: 75, width: "100%", height: "100%" }}
-              source={{ uri: userDetails?.ProfilePicture }}
+              source={{ uri: userData?.ProfilePicture }}
             />
           ) : (
             <View
@@ -131,12 +133,12 @@ export default function Profile({ navigation }) {
               }}
             >
               <Text style={styles.profileLetter}>
-                {userDetails?.User?.Fullname?.charAt(0)}
+                {userData?.User?.Fullname?.charAt(0)}
               </Text>
             </View>
           )}
 
-          {userDetails?.Verified3 ? (
+          {userData?.Verified3 ? (
             <View
               style={{
                 position: "absolute",
@@ -162,18 +164,18 @@ export default function Profile({ navigation }) {
       </View>
       <View style={{ alignItems: "center", padding: 20, paddingBottom: 0 }}>
         <Text style={[AppStyles.heading, { fontSize: 16 }]}>
-          {TitleCase(userDetails?.User?.Fullname?.trim())}
+          {TitleCase(userData?.User?.Fullname?.trim())}
         </Text>
         <Pressable>
           <Text style={[AppStyles.heading, { fontSize: 12, color: "#7472E0" }]}>
-            {userDetails?.User?.Verified1 === false ? (
+            {userData?.User?.Verified1 !== true ? (
               "Email not verified"
-            ) : userDetails?.User?.Verified2 === false ? (
-              "Profile not set"
-            ) : userDetails?.User?.Verified3 === true ? (
+            ) : userData?.User?.Verified2 !== true ? (
+              "Preference not set"
+            ) : userData?.User?.Verified3 === true ? (
               <Text>Edit Profile</Text>
             ) : (
-              "Preference not set"
+              "KYC not set"
             )}
           </Text>
         </Pressable>
@@ -192,15 +194,15 @@ export default function Profile({ navigation }) {
             <View style={styles.profileDetailItem}>
               <Text style={styles.profileDetailItemLabel}>Email</Text>
               <Text style={styles.profileDetailItemText}>
-                {userDetails?.User?.Email?.trim()}
+                {userData?.User?.Email?.trim()}
               </Text>
             </View>
             <Divider style={{ color: "#7472E0" }} />
             <View style={styles.profileDetailItem}>
               <Text style={styles.profileDetailItemLabel}>Location</Text>
               <Text style={styles.profileDetailItemText}>
-                {userDetails?.Other
-                  ? (userDetails?.Other?.State).trim()
+                {userData?.OtherDetails
+                  ? (userData?.OtherDetails?.State).trim()
                   : "Location not set"}
               </Text>
             </View>
@@ -208,8 +210,8 @@ export default function Profile({ navigation }) {
             <View style={styles.profileDetailItem}>
               <Text style={styles.profileDetailItemLabel}>Phone No</Text>
               <Text style={styles.profileDetailItemText}>
-                {userDetails?.Other
-                  ? (userDetails?.Other?.PhoneNo).trim()
+                {userData?.OtherDetails
+                  ? userData?.OtherDetails?.PhoneNo
                   : "Phone number not set"}
               </Text>
             </View>
@@ -217,29 +219,7 @@ export default function Profile({ navigation }) {
           <View style={styles.contactedContainer}>
             <Text style={styles.contactedHeading}>Recently Contacted</Text>
             {/* flatlist of users */}
-            {data === null || data === undefined ? (
-              Loading === true ? (
-                <View
-                  style={{
-                    flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <ActivityIndicator size="small" color="#7472E0" />
-                </View>
-              ) : (
-                <View
-                  style={{
-                    flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text>No user contacted yet</Text>
-                </View>
-              )
-            ) : !data.leght ? (
+            {Loading === true ? (
               <View
                 style={{
                   flex: 1,
@@ -247,7 +227,17 @@ export default function Profile({ navigation }) {
                   alignItems: "center",
                 }}
               >
-                <Text style={styles.profileDetailItemText}>No user contacted yet</Text>
+                <ActivityIndicator size="small" color="#7472E0" />
+              </View>
+            ) : data.length === 0 ? (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text>No user contacted yet</Text>
               </View>
             ) : (
               <FlatList
@@ -261,7 +251,7 @@ export default function Profile({ navigation }) {
                     data={item}
                   />
                 )}
-                keyExtractor={(item) => item.User._id}
+                keyExtractor={(item) => item?.User?.id}
               />
             )}
           </View>

@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import AppStyles from "../../styles/AppStyles";
@@ -11,9 +11,9 @@ import { ActivityIndicator } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 
 export default function Home({ navigation }) {
-  const { Logout, isLoading, userToken } = useContext(AuthContext);
+  const { Logout, isLoading, userToken, userData } = useContext(AuthContext);
 
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [loadingData, setLoadingData] = useState(true);
 
   useEffect(() => {
@@ -27,9 +27,10 @@ export default function Home({ navigation }) {
       };
 
       await axios
-        .get(`${BASE_URL}/users/personalizeduser`, config)
+        .get(`${BASE_URL}/users/all`, config)
         .then((res) => {
           if (res.data.Access === true && res.data.Error === false) {
+            console.log(res.data);
             return setData(res.data.Data);
           }
         });
@@ -38,7 +39,33 @@ export default function Home({ navigation }) {
     };
     
     getData();
-  }, [isLoading]);
+    setLoadingData(false);
+  }, []);
+
+  const onRefresh = React.useCallback(() => {
+    const getData = async () => {
+      setLoadingData(true);
+
+      let config = {
+        headers: {
+          Authorization: userToken,
+        },
+      };
+
+      await axios
+        .get(`${BASE_URL}/users/all`, config)
+        .then((res) => {
+          if (res.data.Access === true && res.data.Error === false) {
+            console.log(res.data);
+            return setData(res.data.Data);
+          }
+        });
+
+      setLoadingData(false);
+    };
+    
+    getData();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -47,17 +74,22 @@ export default function Home({ navigation }) {
       <View style={AppStyles.upper}>
         <Text style={AppStyles.upperTitle}>SafeSpace</Text>
       </View>
-      <View style={[AppStyles.body, { flex: 1 }]}>
+      <View style={[AppStyles.body, { flex: 1, overflow: "visible" }]}>
         <Text style={AppStyles.heading}>Possible Matches</Text>
 
-        {/* Update info banner if user Verifcation level is less than 3 */}
-        <KYCBannercomponents
-          containerStyle={{ marginVertical: 10 }}
-          navigator={() => navigation.navigate("Search")}
-        />
+        {/* KYC banner */}
+        {userData?.User.Verified2 !== true ? (
+            <KYCBannercomponents
+              navigator={() =>
+                navigation.navigate("VerificationStack", {
+                  screen: "Page1",
+                })
+              }
+            />
+          ) : null}
 
         {/* flatlist of users */}
-        {data === null || data === undefined ? (
+        {loadingData === true ? (
           <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
           >
@@ -65,12 +97,15 @@ export default function Home({ navigation }) {
           </View>
         ) : (
           <FlatList
+          refreshControl={
+            <RefreshControl refreshing={loadingData} onRefresh={onRefresh} />
+          }
             scrollEnabled={true}
             style={{ flex: 1 }}
             data={data}
             renderItem={({ item }) => (
               <MatchListItemComponents
-                containerStyle={{ marginVertical: 10 }}
+                containerStyle={{ marginVertical: 10, overflow: "visible" }}
                 navigation={navigation}
                 data={item}
               />
@@ -78,6 +113,8 @@ export default function Home({ navigation }) {
             keyExtractor={(item) => item.User._id}
           />
         )}
+
+
 
         {/* go to search */}
       </View>

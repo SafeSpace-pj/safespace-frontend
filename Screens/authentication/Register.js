@@ -115,6 +115,7 @@ export default function Register({ navigation }) {
     checkPasswordMatch()
 
     Register(formData.email.toLocaleLowerCase(), formData.password, formData.fullName.toLocaleLowerCase())
+    navigation.replace("Login")
   }
 
   return (

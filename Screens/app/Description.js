@@ -19,46 +19,51 @@ import { AuthContext } from "../../context/AuthContext";
 import { BASE_URL } from "../../utils/config";
 import axios from "axios";
 import formatNumberWithCommas from "../../utils/formatNumberWithCommas";
+import TitleCase from "../../utils/TitleCase";
 // import { ScrollView } from "react-native-gesture-handler";
 
 export default function Description({ route, navigation }) {
   const { data } = route.params;
   const [Loading, setLoading] = useState(true);
+  const [enable, setEnable] = useState();
   const { userToken, Notify, Contact } = useContext(AuthContext);
 
-  const [descriptorDetails, setDescriptorDetails] = useState(null);
+  const [descriptorDetails, setDescriptorDetails] = useState({});
 
   useEffect(() => {
     async function getData() {
       setLoading(true);
-  
+
       let config = {
         headers: {
           Authorization: userToken,
         },
       };
-  
+
       await axios
         .get(`${BASE_URL}/users/other?ref=${data}`, config)
         .then((res) => {
           if (res.data.Access === true && res.data.Error === false) {
-           setDescriptorDetails(res.data.Data);
-           setLoading(false);
+            setDescriptorDetails(res.data.Data);
+            setEnable(res.data.Data?.Contacted)
+            setLoading(false);
           }
-        }).catch((err) => console.log(err));
-  
+        })
+        .catch((err) => console.log(err));
+
       setLoading(false);
-    };
-    
-    getData()
+    }
+
+    getData();
   }, []);
 
   const HandleContact = () => {
+    setEnable(!enable)
     if (descriptorDetails?.Contacted === true) {
-      return Notify("User contacted previously")
+      return Notify("User contacted previously");
     }
-    Contact(descriptorDetails?.User?._id)
-  }
+    Contact(descriptorDetails?.User?._id);
+  };
 
   if (Loading) {
     return (
@@ -69,11 +74,72 @@ export default function Description({ route, navigation }) {
     );
   }
 
+  if (!descriptorDetails?.User) {
+    return (
+      <View style={styles.container}>
+        <StatusBar style="light" />
+        <View
+          style={[
+            AppStyles.upper,
+            {
+              paddingHorizontal: 24,
+              alignItems: "flex-end",
+              height: "14%",
+            },
+          ]}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <Pressable onPress={() => navigation.goBack()}>
+              <Ionicons
+                name="ios-chevron-back-outline"
+                size={24}
+                color="#ffffff"
+              />
+            </Pressable>
+            <Text
+              style={{
+                fontFamily: "Poppins_400Regular",
+                color: "white",
+                fontSize: 22,
+              }}
+            >
+              User Match
+            </Text>
+            <Ionicons
+              name="ios-chevron-back-outline"
+              size={24}
+              color="#ffffff"
+              style={{ opacity: 0 }}
+            />
+          </View>
+        </View>
+
+        {/* body */}
+        <View style={{ flex: 1, padding: 24, justifyContent: "center", alignItems: "center" }}>
+          <Text style={{ fontFamily: "Poppins_500Medium", fontSize: 18 }}>User Unvailable</Text>
+          <Text style={{
+              fontFamily: "Poppins_400Regular",
+              fontSize: 12,
+              color: "#00000080",
+            }}>Unfortunately this user isn't available</Text>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      <StatusBar style="inverted"
-      //  backgroundColor="#000000A1"
-        />
+      <StatusBar
+        style="inverted"
+        //  backgroundColor="#000000A1"
+      />
       {/* purple top banner */}
       <View style={AppStyles.upperBanner}>
         <ImageBackground
@@ -98,14 +164,16 @@ export default function Description({ route, navigation }) {
         bounces={true}
         style={AppStyles.minusBody}
       >
-        <KYCBannercomponents containerStyle={{ marginBottom: 10 }} navigator={() => navigation.navigate("Search")} />
-
         <Text style={styles.nameText}>
-          {descriptorDetails?.User.Fullname}
+          {TitleCase(descriptorDetails?.User?.Fullname)}
         </Text>
 
         <Text style={[styles.text, { marginVertical: 12 }]}>
-         {formatNumberWithCommas(descriptorDetails?.OtherDetails?.RentBudget)} / <Text style={styles.textInner}>{descriptorDetails?.OtherDetails?.ResidenceType}</Text>
+          {formatNumberWithCommas(descriptorDetails?.OtherDetails?.RentBudget)}{" "}
+          /{" "}
+          <Text style={styles.textInner}>
+            {descriptorDetails?.OtherDetails?.ResidenceType}
+          </Text>
         </Text>
 
         <View
@@ -119,16 +187,20 @@ export default function Description({ route, navigation }) {
           <View style={styles.row}>
             <Ionicons name="location-sharp" size={14} color="#7472E0" />
             <Text style={styles.rowText}>
-            {descriptorDetails?.OtherDetails?.State}
+              {descriptorDetails?.OtherDetails?.State}
             </Text>
           </View>
           <View style={styles.row}>
             <Entypo name="dot-single" size={24} color="#7472E0" />
-            <Text style={styles.rowText}>{descriptorDetails?.OtherDetails?.ResidenceType}</Text>
+            <Text style={styles.rowText}>
+              {descriptorDetails?.OtherDetails?.ResidenceType}
+            </Text>
           </View>
           <View style={styles.row}>
             <Entypo name="dot-single" size={24} color="#7472E0" />
-            <Text style={styles.rowText}>{descriptorDetails?.OtherDetails?.RentSplit}</Text>
+            <Text style={styles.rowText}>
+              {descriptorDetails?.OtherDetails?.RentSplit}
+            </Text>
           </View>
         </View>
 
@@ -138,7 +210,7 @@ export default function Description({ route, navigation }) {
           <View style={styles.subGroup}>
             <Text style={styles.subHeading}>Description</Text>
             <Text style={styles.subText}>
-            {descriptorDetails?.OtherDetails?.Bio}
+              {descriptorDetails?.OtherDetails?.Bio}
             </Text>
           </View>
           <View style={styles.subGroup}>
@@ -153,22 +225,35 @@ export default function Description({ route, navigation }) {
             >
               <View style={styles.row}>
                 <Ionicons name="md-checkmark" size={24} color="#7472E0" />
-                <Text style={styles.rowText}>{descriptorDetails?.OtherDetails?.Gender}</Text>
+                <Text style={styles.rowText}>
+                  {descriptorDetails?.OtherDetails?.Gender}
+                </Text>
               </View>
               <View style={styles.row}>
                 <Ionicons name="md-checkmark" size={24} color="#7472E0" />
-                <Text style={styles.rowText}>Earns {descriptorDetails?.OtherDetails?.IncomeMonthly}</Text>
+                <Text style={styles.rowText}>
+                  Earns {descriptorDetails?.OtherDetails?.IncomeMonthly}
+                </Text>
               </View>
               <View style={styles.row}>
                 <Ionicons name="md-checkmark" size={24} color="#7472E0" />
-                <Text style={styles.rowText}>{descriptorDetails?.OtherDetails?.Occupation}</Text>
+                <Text style={styles.rowText}>
+                  {descriptorDetails?.OtherDetails?.Occupation}
+                </Text>
               </View>
             </View>
           </View>
 
           <Pressable onPress={HandleContact} style={AppStyles.contactButton}>
-              <Text style={[AppStyles.contactButtonText, descriptorDetails?.Contacted === true && { opacity: 0.5 }]}>Contact now</Text>
-            </Pressable>
+            <Text
+              style={[
+                AppStyles.contactButtonText,
+                enable === true ? { opacity: 0.5 } : null,
+              ]}
+            >
+              Contact now
+            </Text>
+          </Pressable>
           <View
             style={{
               height: 36,
@@ -222,6 +307,6 @@ const styles = StyleSheet.create({
   subText: {
     fontFamily: "Poppins_400Regular",
     color: "#00000080",
-    fontSize: 12
+    fontSize: 12,
   },
 });

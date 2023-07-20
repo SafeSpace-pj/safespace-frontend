@@ -6,7 +6,7 @@ export default function SearchInputComponent({ iconName, placeHolder, value, onC
   return (
     <View style={styles.container}>
       <Ionicons name={iconName} size={14} color="#7472E0" />
-      <TextInput style={styles.textInput} placeholder={placeHolder} value={value} onChangeText={onChangeText} />
+      <TextInput placeholderTextColor="#000000" style={styles.textInput} placeholder={placeHolder} value={value} onChangeText={onChangeText} />
     </View>
   )
 }
@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
         borderRadius: 4
     },
     textInput: {
-        flex: 1
+        flex: 1,
+        color: "#000000"
     }
 })

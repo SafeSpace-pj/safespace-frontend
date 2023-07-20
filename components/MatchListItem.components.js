@@ -5,18 +5,24 @@ import { Image } from "react-native";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import TitleCase from "../utils/TitleCase";
 
-export default function MatchListItemComponents({ navigation, containerStyle, data }) {
-
+export default function MatchListItemComponents({
+  navigation,
+  containerStyle,
+  data,
+}) {
+  
   if (data === null) {
     return <Text>Loading...</Text>;
   }
 
   return (
     <Pressable
-      onPress={() => navigation.navigate("Description", { data: data?.User?._id })}
+      onPress={() =>
+        navigation.navigate("Description", { data: data?.User?._id })
+      }
       style={[styles.container, containerStyle]}
     >
-      <Image style={styles.image} source={{ uri: data?.profile }} />
+      <Image style={styles.image} source={{ uri: data?.Profile }} />
       <View style={styles.column}>
         <Text style={styles.nameText}>
           {TitleCase(data?.User?.Fullname)}
@@ -27,14 +33,16 @@ export default function MatchListItemComponents({ navigation, containerStyle, da
         <View style={styles.rowContainer}>
           <View style={styles.row}>
             <Ionicons name="location-sharp" size={14} color="#7472E0" />
-            <Text style={styles.rowText}>
-              Asokoro, Abuja
-            </Text>
+            <Text style={styles.rowText}>Asokoro, Abuja</Text>
           </View>
           <View style={styles.row}>
-            <Entypo name="dot-single" size={24} color="#2DD35C" />
+            <Entypo
+              name="dot-single"
+              size={24}
+              color={data?.User?.Visible ? "#2DD35C" : "#FD3131"}
+            />
             <Text style={styles.rowText}>
-              Available
+              {data?.User?.Visible ? "Available" : "Unvailable"}
             </Text>
           </View>
         </View>
@@ -46,11 +54,8 @@ export default function MatchListItemComponents({ navigation, containerStyle, da
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#FFFFFF",
-    shadowColor: "rgba(0, 0, 0, 0.5)",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 1,
-    shadowRadius: 8,
-    elevation: 2,
+    borderColor: "#7472E0",
+    borderWidth: 0.5,
     padding: 12,
     borderRadius: 8,
     flexDirection: "row",
@@ -65,6 +70,7 @@ const styles = StyleSheet.create({
   column: {
     flexDirection: "column",
     justifyContent: "space-between",
+    flex: 1,
   },
   nameText: {
     color: "#000000B2",
@@ -83,7 +89,7 @@ const styles = StyleSheet.create({
   rowContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
   },
   row: {
     flexDirection: "row",

@@ -1,17 +1,25 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Feather } from "@expo/vector-icons";
 
-export default function NotificationsItem() {
+export default function NotificationsItem(props) {
+
+  const { Body, Status, Title, onPress } = props
+
   return (
-    <View style={styles.container}>
+    <Pressable onPress={onPress} style={styles.container}>
       <View style={styles.iconContainer}>
-        <Feather name="bell" size={24} color="#7472E0" />
+        <View style={{ position: "relative" }}>
+          <Feather name="bell" size={24} color="#7472E0" />
+          {Status === false && <View style={styles.unread} />}
+        </View>
       </View>
-    <View style={styles.textConatiner}>
-    <Text style={styles.lowerText}>Welcome, Don’t forget to complete your personal info.</Text>
-    </View>
-    </View>
+      <View style={styles.textConatiner}>
+        <Text style={styles.lowerText}>
+          {Body}
+        </Text>
+      </View>
+    </Pressable>
   );
 }
 
@@ -23,6 +31,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     flexDirection: "row",
     gap: 12,
+    alignItems: "center"
   },
   iconContainer: {
     backgroundColor: "#7472E033",
@@ -31,6 +40,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 8,
+    position: "relative",
   },
   textConatiner: {
     // gap: 8,
@@ -39,6 +49,15 @@ const styles = StyleSheet.create({
   lowerText: {
     fontFamily: "Poppins_400Regular",
     fontSize: 12,
-    color: "#000000CC"
+    color: "#000000CC",
+  },
+  unread: {
+    backgroundColor: "red",
+    width: 6,
+    height: 6,
+    borderRadius: 5,
+    position: "absolute",
+    top: 3,
+    right: 3,
   },
 });

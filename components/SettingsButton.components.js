@@ -7,15 +7,16 @@ export default function SettingsButton({
   iconName,
   text,
   iconComponent,
+  contentContainerStyle
 }) {
   return (
     <Pressable
-      style={{
+      style={[{
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
         paddingVertical: 4,
-      }}
+      }, contentContainerStyle]}
       onPress={onPress}
     >
       <View style={{ flexDirection: "row", alignItems: "center", gap: 14 }}>
