@@ -107,7 +107,6 @@ export default function Register({ navigation }) {
 
   const ButtonAction = () => {
     // Extra validation in case any fails somehow 🤷‍♂️
-    console.log(formData);
 
     checkEmailValid()
     checkNameLenght()

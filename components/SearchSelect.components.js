@@ -11,10 +11,6 @@ export default function SearchSelectComponent({ iconName, name, value, setValue,
       <Ionicons name={iconName} size={14} color="#7472E0" />
       <Dropdown
           style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
-          placeholderStyle={styles.placeholderStyle}
-          selectedTextStyle={styles.selectedTextStyle}
-          inputSearchStyle={styles.inputSearchStyle}
-          iconStyle={styles.iconStyle}
           data={data}
           maxHeight={300}
           labelField="label"

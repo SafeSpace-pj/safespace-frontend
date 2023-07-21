@@ -15,11 +15,18 @@ export default function Search({ route, navigation }) {
   const [fortypemData, setFormD] = useState();
 
   const ButtonAction = async () => {
-    if (!formState || !price || !fortypemData){
-      return Notify("Form data required")
+    if (!formState || !price || !fortypemData) {
+      return Notify("Form data required");
     }
-    navigation.navigate("SearchDetails", {state: formState, price: price, type: fortypemData})
-  }
+    navigation.navigate("SearchDetails", {
+      state: formState,
+      price: price,
+      type: fortypemData,
+    });
+    setFormState("");
+    setFormP("");
+    setFormD("");
+  };
 
   return (
     <Pressable style={styles.container} onPress={() => Keyboard.dismiss()}>
@@ -43,12 +50,10 @@ export default function Search({ route, navigation }) {
                 { label: "Niger", value: "Niger" },
               ]}
               name="Residence location"
-              setValue={(val) =>
-                setFormState(val)
-              }
+              setValue={(val) => setFormState(val)}
               value={formState}
             />
-            <SearchSelectComponent
+            {/* <SearchSelectComponent
               iconName="pricetag"
               data={[
                 { label: "5k - 10k", value: "5k - 10k" },
@@ -63,6 +68,13 @@ export default function Search({ route, navigation }) {
                 setFormP(val)
               }
               value={price}
+            /> */}
+            <SearchInputComponent
+              onChangeText={(val) => setFormP(val)}
+              iconName="md-business-outline"
+              placeHolder="Price Range / Budget"
+              value={price}
+              keyboardType="phone-pad"
             />
             <SearchSelectComponent
               iconName="md-business-outline"
@@ -73,9 +85,7 @@ export default function Search({ route, navigation }) {
                 { label: "3 bedroom apt", value: "3 bedroom apt" },
               ]}
               name="Resident Type"
-              setValue={(val) =>
-                setFormD(val)
-              }
+              setValue={(val) => setFormD(val)}
               value={fortypemData}
             />
             {/* <SearchSelectComponent iconName="md-business-outline" placeHolder="Resident Type" /> */}

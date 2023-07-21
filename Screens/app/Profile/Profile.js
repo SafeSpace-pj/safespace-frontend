@@ -30,11 +30,9 @@ export default function Profile({ navigation }) {
   const [data, setData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
-  console.log(userData);
-
   useEffect(() => {
-    getUserData()
-    setLoading(true)
+    getUserData();
+    setLoading(true);
     async function getData() {
       let config = {
         headers: {
@@ -53,7 +51,7 @@ export default function Profile({ navigation }) {
     }
 
     getData();
-    setLoading(false)
+    setLoading(false);
   }, []);
 
   if (userData === null) {
@@ -64,17 +62,15 @@ export default function Profile({ navigation }) {
     );
   }
 
-  const onRefresh = React.useCallback(() => {
-    
-    async function getData() {
+  const onRefresh = React.useCallback(async () => {
       setLoading(true);
-    setRefreshing(true);
+      setRefreshing(true);
 
       let config = {
         headers: {
           Authorization: userToken,
         },
-      }
+      };
 
       await axios
         .get(`${BASE_URL}/users/contacted`, config)
@@ -85,11 +81,8 @@ export default function Profile({ navigation }) {
         })
         .catch((err) => console.error(err));
 
-        setLoading(false);
-        setRefreshing(false);
-    }
-
-    getData();
+      setLoading(false);
+      setRefreshing(false);
   }, []);
 
   return (
@@ -133,7 +126,7 @@ export default function Profile({ navigation }) {
               }}
             >
               <Text style={styles.profileLetter}>
-                {userData?.User?.Fullname?.charAt(0)}
+                {userData?.User?.Fullname?.charAt(0)?.toUpperCase()}
               </Text>
             </View>
           )}

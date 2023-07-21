@@ -4,6 +4,7 @@ import axios from "axios";
 import { Image } from "react-native";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import TitleCase from "../utils/TitleCase";
+import formatNumberWithCommas from "../utils/formatNumberWithCommas";
 
 export default function MatchListItemComponents({
   navigation,
@@ -25,10 +26,10 @@ export default function MatchListItemComponents({
       <Image style={styles.image} source={{ uri: data?.Profile }} />
       <View style={styles.column}>
         <Text style={styles.nameText}>
-          {TitleCase(data?.User?.Fullname)}
+          {data?.User?.Fullname ? TitleCase(data?.User?.Fullname) : null}
         </Text>
         <Text style={styles.text}>
-          ₦ 80,000 / <Text style={styles.textInner}>per year</Text>
+          ₦ {data?.OtherDetails?.RentBudget ? formatNumberWithCommas(data?.OtherDetails?.RentBudget) : null} / <Text style={styles.textInner}>per year</Text>
         </Text>
         <View style={styles.rowContainer}>
           <View style={styles.row}>

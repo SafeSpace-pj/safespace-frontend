@@ -46,7 +46,7 @@ export default function Notifications({ navigation }) {
             setData(res.data.Notifications);
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.error(err));
     }
 
     getData();
@@ -70,7 +70,7 @@ export default function Notifications({ navigation }) {
             setData(res.data.Notifications);
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.error(err));
     }
 
     getData();

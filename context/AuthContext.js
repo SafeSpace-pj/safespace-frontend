@@ -38,6 +38,11 @@ const AuthProvider = ({ children }) => {
       .then(async (res) => {
         if (res.data.Access === true && res.data.Error === false) {
           // AsyncStorage.setItem("userData", JSON.stringify(res.data.Data));
+
+          if (res.data.Data.User.Verified1 === false) {
+            return Notify("Verify your email to continue");
+          }
+
           AsyncStorage.setItem("userToken", res.data.Data.Auth);
           // AsyncStorage.setItem(
           //   "Visibility",
@@ -55,7 +60,6 @@ const AuthProvider = ({ children }) => {
 
           await axios.get(`${BASE_URL}/users/i`, config).then(async (res) => {
             if (res.data.Access === true && res.data.Error === false) {
-              console.log(res.data);
               await AsyncStorage.setItem(
                 "userData",
                 JSON.stringify(res.data.Data)
@@ -74,7 +78,7 @@ const AuthProvider = ({ children }) => {
       })
       .catch((err) => {
         Notify("Someting went wrong");
-        console.log(err);
+        console.error(err);
       });
     setLoading(false);
   };
@@ -95,7 +99,7 @@ const AuthProvider = ({ children }) => {
       })
       .catch((err) => {
         Notify("Someting went wrong");
-        console.log(err);
+        console.error(err);
       });
     setLoading(false);
   };
@@ -125,7 +129,7 @@ const AuthProvider = ({ children }) => {
         setVisibility(userData?.User?.Visible);
       }
     } catch (error) {
-      console.log(`isAuthenticated in error state: ${error}`);
+      console.error(`isAuthenticated in error state: ${error}`);
     }
     setLoading(false);
   };
@@ -189,7 +193,7 @@ const AuthProvider = ({ children }) => {
       })
       .catch((err) => {
         Notify("Something went wrong!");
-        console.log(err);
+        console.error(err);
       });
 
     setLoading(false);
@@ -213,9 +217,6 @@ const AuthProvider = ({ children }) => {
       });
 
     setLoading(false);
-
-    console.log(sendResetEmailResponse);
-
     return sendResetEmailResponse;
   };
 
@@ -233,7 +234,6 @@ const AuthProvider = ({ children }) => {
       })
       .then((res) => {
         ResetResponse = res.data;
-        console.log(ResetResponse);
       })
       .catch((err) => {
         Notify("Someting went wrong");
@@ -287,10 +287,10 @@ const AuthProvider = ({ children }) => {
         })
         .catch((err) => {
           Notify("Someting went wrong");
-          console.log(err);
+          console.error(err);
         });
     } catch (error) {
-      console.log(`isAuthenticated in error state: ${error}`);
+      console.error(`isAuthenticated in error state: ${error}`);
     }
 
     setLoading(false);
@@ -340,10 +340,10 @@ const AuthProvider = ({ children }) => {
       })
       .catch((err) => {
         Notify("Someting went wrong");
-        console.log(err);
+        console.error(err);
       });
   } catch (error) {
-    console.log(`isAuthenticated in error state: ${error}`);
+    console.error(`isAuthenticated in error state: ${error}`);
   }
 
   setLoading(false);
@@ -360,15 +360,14 @@ const AuthProvider = ({ children }) => {
     await axios
       .post(`${BASE_URL}/contact`, { ContactID: data }, config)
       .then(async (res) => {
-        console.log(res.data);
-        if (res.data.Access === true && res.data.Error !== true) {
+        if (res.data.Access === true && res.data.Error !== true && res.data.Contact === true) {
           return Notify("User contacted sucessfully");
         }
-        Notify(res.data.Error);
+        Notify("Complete verification!");
       })
       .catch((err) => {
         Notify("Someting went wrong");
-        console.log(err);
+        console.error(err);
       });
   };
 
@@ -384,11 +383,9 @@ const AuthProvider = ({ children }) => {
       .post(`${BASE_URL}/upload/editProfile`, data, config)
       .then(async (res) => {
         if (res.data.Access === true && res.data.Error === false) {
-          console.log(res.data);
           await axios.get(`${BASE_URL}/users/i`, config).then(async (res) => {
             if (res.data.Access === true && res.data.Error === false) {
               await AsyncStorage.setItem("userData", JSON.stringify(res.data.Data));
-              console.log(res.data.Data);
               await setUserData(res.data.Data);
             }
           });

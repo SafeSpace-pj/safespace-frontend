@@ -17,7 +17,7 @@ export default function Home({ navigation }) {
   const [loadingData, setLoadingData] = useState(true);
 
   useEffect(() => {
-    const getData = async () => {
+    async function getData() {
       setLoadingData(true);
 
       let config = {
@@ -30,7 +30,6 @@ export default function Home({ navigation }) {
         .get(`${BASE_URL}/users/all`, config)
         .then((res) => {
           if (res.data.Access === true && res.data.Error === false) {
-            console.log(res.data);
             return setData(res.data.Data);
           }
         });
@@ -56,7 +55,6 @@ export default function Home({ navigation }) {
         .get(`${BASE_URL}/users/all`, config)
         .then((res) => {
           if (res.data.Access === true && res.data.Error === false) {
-            console.log(res.data);
             return setData(res.data.Data);
           }
         });
@@ -103,14 +101,14 @@ export default function Home({ navigation }) {
             scrollEnabled={true}
             style={{ flex: 1 }}
             data={data}
-            renderItem={({ item }) => (
-              <MatchListItemComponents
+            renderItem={({ item }) => {
+              return (<MatchListItemComponents
                 containerStyle={{ marginVertical: 10, overflow: "visible" }}
                 navigation={navigation}
                 data={item}
-              />
-            )}
-            keyExtractor={(item) => item.User._id}
+              />)
+            }}
+            keyExtractor={(item) => item?.User?._id}
           />
         )}
 

@@ -23,8 +23,6 @@ export default function Settings({ route, navigation }) {
   const {
     Logout,
     setSwitch,
-    isLoading,
-    isVisible,
     uploadFile,
     userData,
     getUserData,
@@ -106,7 +104,7 @@ export default function Settings({ route, navigation }) {
               }}
             >
               <Text style={styles.profileLetter}>
-                {userData?.User?.Fullname?.charAt(0)}
+                {userData?.User?.Fullname?.charAt(0)?.toUpperCase()}
               </Text>
             </View>
           )}
@@ -136,7 +134,7 @@ export default function Settings({ route, navigation }) {
       </View>
       <View style={{ alignItems: "center", padding: 20, paddingBottom: 0 }}>
         <Text style={[AppStyles.heading, { fontSize: 16 }]}>
-          {/* {TitleCase((userData?.User?.Fullname).trim())} */}
+          {TitleCase((userData?.User?.Fullname).trim())}
         </Text>
         <Pressable onPress={() => navigation.navigate("Profile")}>
           <Text style={[AppStyles.heading, { fontSize: 12, color: "#7472E0" }]}>

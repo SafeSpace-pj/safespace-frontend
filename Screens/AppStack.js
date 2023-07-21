@@ -7,11 +7,12 @@ import Search from "./app/Search/Search";
 import SearchDetails from "./app/Search/SearchDetails";
 import Settings from "./app/Settings/Settings";
 import Profile from "./app/Profile/Profile";
-import VerificationStack from './VerificationStack'
+import VerificationStack from "./VerificationStack";
 
 import { Ionicons } from "@expo/vector-icons";
 import Help from "./app/Help";
 import NotificationsStack from "./NotificationsStack";
+import { Platform } from "react-native";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -40,8 +41,10 @@ function TabNavigation() {
       initialRouteName="Home"
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarStyle: { padding: 2, height: 56 },
-        tabBarLabelStyle: { paddingBottom: 4 },
+        tabBarStyle:
+          Platform.OS === "android" ? { padding: 2, height: 56 } : null,
+        tabBarLabelStyle:
+          Platform.OS === "android" ? { paddingBottom: 4 } : null,
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 

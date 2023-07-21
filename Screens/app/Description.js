@@ -5,12 +5,10 @@ import {
   Text,
   View,
   ScrollView,
-  Dimensions,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import AppStyles from "../../styles/AppStyles";
 import { StatusBar } from "expo-status-bar";
-import KYCBannercomponents from "../../components/KYCBanner.components";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import { Divider } from "react-native-paper";
@@ -20,13 +18,11 @@ import { BASE_URL } from "../../utils/config";
 import axios from "axios";
 import formatNumberWithCommas from "../../utils/formatNumberWithCommas";
 import TitleCase from "../../utils/TitleCase";
-// import { ScrollView } from "react-native-gesture-handler";
 
 export default function Description({ route, navigation }) {
   const { data } = route.params;
   const [Loading, setLoading] = useState(true);
-  const [enable, setEnable] = useState();
-  const { userToken, Notify, Contact } = useContext(AuthContext);
+  const { userToken, Notify, Contact, userData } = useContext(AuthContext);
 
   const [descriptorDetails, setDescriptorDetails] = useState({});
 
@@ -45,11 +41,10 @@ export default function Description({ route, navigation }) {
         .then((res) => {
           if (res.data.Access === true && res.data.Error === false) {
             setDescriptorDetails(res.data.Data);
-            setEnable(res.data.Data?.Contacted)
             setLoading(false);
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.error(err));
 
       setLoading(false);
     }
@@ -58,7 +53,10 @@ export default function Description({ route, navigation }) {
   }, []);
 
   const HandleContact = () => {
-    setEnable(!enable)
+    if (!userData?.User?.Verified3) {
+      return Notify("Action not allowed, Verify your account to continue!");
+    }
+
     if (descriptorDetails?.Contacted === true) {
       return Notify("User contacted previously");
     }
@@ -122,13 +120,26 @@ export default function Description({ route, navigation }) {
         </View>
 
         {/* body */}
-        <View style={{ flex: 1, padding: 24, justifyContent: "center", alignItems: "center" }}>
-          <Text style={{ fontFamily: "Poppins_500Medium", fontSize: 18 }}>User Unvailable</Text>
-          <Text style={{
+        <View
+          style={{
+            flex: 1,
+            padding: 24,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text style={{ fontFamily: "Poppins_500Medium", fontSize: 18 }}>
+            User Unvailable
+          </Text>
+          <Text
+            style={{
               fontFamily: "Poppins_400Regular",
               fontSize: 12,
               color: "#00000080",
-            }}>Unfortunately this user isn't available</Text>
+            }}
+          >
+            Unfortunately this user isn't available
+          </Text>
         </View>
       </View>
     );
@@ -248,10 +259,12 @@ export default function Description({ route, navigation }) {
             <Text
               style={[
                 AppStyles.contactButtonText,
-                enable === true ? { opacity: 0.5 } : null,
+                descriptorDetails?.Contacted === true ? { opacity: 0.5 } : null,
               ]}
             >
-              Contact now
+              {descriptorDetails?.Contacted === true
+                ? "Contacted"
+                : "Contact now"}
             </Text>
           </Pressable>
           <View
