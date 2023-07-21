@@ -21,7 +21,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#7472E0"
-      }
+      },
+      "package": "com.kingsonseang.SafeSpace"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -32,11 +33,15 @@
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends.",
           "cameraPermission": "Allow $(PRODUCT_NAME) to open the camera",
-
           "//": "Disables the microphone permission",
           "microphonePermission": false
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "574fbb03-e3e3-4714-b101-9d1fb9fa5106"
+      }
+    }
   }
 }
