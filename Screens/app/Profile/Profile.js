@@ -244,7 +244,7 @@ export default function Profile({ navigation }) {
                     data={item}
                   />
                 )}
-                keyExtractor={(item) => item?.User?.id}
+                keyExtractor={(item) => item?.User?._id}
               />
             )}
           </View>
