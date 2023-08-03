@@ -196,7 +196,7 @@ export default function Description({ route, navigation }) {
           }}
         >
           <View style={styles.row}>
-            <Ionicons name="location-sharp" size={14} color="#7472E0" />
+            <Ionicons name="location-sharp" size={14} style={{ marginHorizontal: 7 }} color="#7472E0" />
             <Text style={styles.rowText}>
               {descriptorDetails?.OtherDetails?.State}
             </Text>

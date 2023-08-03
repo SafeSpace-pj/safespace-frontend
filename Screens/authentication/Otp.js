@@ -18,7 +18,7 @@ import { AuthContext } from "../../context/AuthContext";
 
 export default function Otp({ route, navigation }) {
 
-  const { Reset } = useContext(AuthContext)
+  const { Reset, Notify } = useContext(AuthContext)
 
   const { resetEmail } = route.params;
 

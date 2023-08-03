@@ -34,7 +34,7 @@ export default function MatchListItemComponents({
         <View style={styles.rowContainer}>
           <View style={styles.row}>
             <Ionicons name="location-sharp" size={14} color="#7472E0" />
-            <Text style={styles.rowText}>Asokoro, Abuja</Text>
+            <Text style={styles.rowText}>Asokoro, {data?.OtherDetails?.State}</Text>
           </View>
           <View style={styles.row}>
             <Entypo
