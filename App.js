@@ -8,12 +8,14 @@ import {
   Poppins_400Regular_Italic,
 } from "@expo-google-fonts/poppins";
 import { StyleSheet, Text, View } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import * as NavigationBar from 'expo-navigation-bar';
 import AuthProvider from "./context/AuthContext";
 import AppNav from "./Screens/AppNav";
 
 
 export default function App() {
+  NavigationBar.setBackgroundColorAsync("white");
+  
   let [fontsLoaded] = useFonts({
     Poppins_400Regular,
     Poppins_600SemiBold,
