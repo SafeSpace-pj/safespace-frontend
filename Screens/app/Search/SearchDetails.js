@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import AppStyles from "../../../styles/AppStyles";
 import { Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -55,9 +55,11 @@ export default function SearchDetails({ route, navigation }) {
         },
       };
 
-      await axios.get(`${BASE_URL}/users/all`, config).then((res) => {
+      await axios.get(`${BASE_URL}/users/all`, config).then(async (res) => {
         if (res.data.Access === true && res.data.Error === false) {
-          return setData(filterData(res.data.Data, state, price, type));
+          const i = await filterData(res.data.Data, state, price, type)
+          console.log(i);
+          return setData(i);
         }
       });
 
@@ -66,7 +68,7 @@ export default function SearchDetails({ route, navigation }) {
 
     getData();
     setLoadingData(false);
-  }, []);
+  }, [data]);
 
   const onRefresh = React.useCallback(() => {
     const getData = async () => {
@@ -80,7 +82,7 @@ export default function SearchDetails({ route, navigation }) {
 
       await axios.get(`${BASE_URL}/users/all`, config).then((res) => {
         if (res.data.Access === true && res.data.Error === false) {
-          return setData(res.data.Data);
+          return setData(filterData(res.data.Data, state, price, type));
         }
       });
 
@@ -168,8 +170,10 @@ export default function SearchDetails({ route, navigation }) {
             >
               <ActivityIndicator size="small" color="#7472E0" />
             </View>
-          ) : !data ? (
-            <Text>No users found with your search</Text>
+          ) : !data?.lenght || data === [] ? (
+            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+              <Text style={{ opacity: 1, fontSize: 32 }}>No users found with your search 😩</Text>
+            </View>
           ) : (
             <FlatList
               scrollEnabled={false}
