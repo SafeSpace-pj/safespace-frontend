@@ -5,12 +5,8 @@ import { Image } from "react-native";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import TitleCase from "../utils/TitleCase";
 import formatNumberWithCommas from "../utils/formatNumberWithCommas";
-import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
-import LinearGradient from "expo-linear-gradient";
 import { AuthContext } from "../context/AuthContext";
 import { BASE_URL } from "../utils/config";
-
-const Shimmer = createShimmerPlaceholder(LinearGradient);
 
 export default function MatchListItemComponents({
   navigation,
@@ -54,7 +50,6 @@ export default function MatchListItemComponents({
   }, []);
 
   return (
-    <Shimmer visible={Loading}>
       <Pressable
         onPress={() =>
           navigation.navigate("Description", { data: itemdata?.User?._id })
@@ -93,7 +88,6 @@ export default function MatchListItemComponents({
           </View>
         </View>
       </Pressable>
-    </Shimmer>
   );
 }
 

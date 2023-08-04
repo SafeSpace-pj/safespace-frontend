@@ -17,7 +17,7 @@ import { ActivityIndicator } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 
 export default function Home({ navigation }) {
-  const { Logout, isLoading, userToken, userData } = useContext(AuthContext);
+  // const { Logout, isLoading, userToken, userData } = useContext(AuthContext);
 
   const [data, setData] = useState([]);
   const [unMatched, setUnmatched] = useState([]);
