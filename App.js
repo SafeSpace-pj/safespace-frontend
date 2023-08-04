@@ -14,8 +14,8 @@ import AppNav from "./Screens/AppNav";
 
 
 export default function App() {
-  NavigationBar.setBackgroundColorAsync("white");
-  
+  NavigationBar.setBackgroundColorAsync('#ffffff00')
+
   let [fontsLoaded] = useFonts({
     Poppins_400Regular,
     Poppins_600SemiBold,
