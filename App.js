@@ -24,9 +24,11 @@ export default function App() {
     Poppins_800ExtraBold,
     Poppins_400Regular_Italic,
   });
+
   if (!fontsLoaded) {
     return null;
   }
+  
   return (
       <AuthProvider>
         <AppNav />

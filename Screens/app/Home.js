@@ -17,7 +17,7 @@ import { ActivityIndicator } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 
 export default function Home({ navigation }) {
-  // const { Logout, isLoading, userToken, userData } = useContext(AuthContext);
+  const { Logout, isLoading, userToken, userData } = useContext(AuthContext);
 
   const [data, setData] = useState([]);
   const [unMatched, setUnmatched] = useState([]);
@@ -153,8 +153,8 @@ export default function Home({ navigation }) {
         ) : null}
 
         {/* Show other user after matched users */}
-        (
-          <>
+      
+        
           {/* Banner to show that they arent a match */}
             {/* <KYCBannercomponents
               navigator={() =>
@@ -184,8 +184,8 @@ export default function Home({ navigation }) {
               }}
               keyExtractor={(item) => item?.User?._id}
             /> */}
-          </>
-        )
+          
+      
       </View>
     </View>
   );

@@ -8,7 +8,7 @@ export default function DropdownElement({ name, data, value, setValue }) {
   return (
     <View>
       <Dropdown
-          style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+          style={[styles.dropdown, isFocus ? { borderColor: 'blue' } : null]}
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.selectedTextStyle}
           inputSearchStyle={styles.inputSearchStyle}

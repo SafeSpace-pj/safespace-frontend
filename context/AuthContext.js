@@ -9,7 +9,7 @@ export const AuthContext = React.createContext();
 const AuthProvider = ({ children }) => {
   const [isLoading, setLoading] = React.useState(false);
   const [isVisible, setVisibility] = React.useState(null);
-  const [userToken, setUserToken] = React.useState(null);
+  const [userToken, setUserToken] = React.useState('');
   const [userData, setUserData] = React.useState(null);
 
   const Notify = (message) => {
