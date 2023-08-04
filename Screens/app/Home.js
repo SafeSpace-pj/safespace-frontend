@@ -37,6 +37,7 @@ export default function Home({ navigation }) {
         .get(`${BASE_URL}/users/personalizeduser`, config)
         .then(async (res) => {
           if (res.data.Access === true && res.data.Error === false) {
+            console.log(res.data.Data);
             await setData(res.data.Data);
             await axios
               .get(`${BASE_URL}/users/all`, config)

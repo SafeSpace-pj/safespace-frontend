@@ -53,7 +53,7 @@ export default function Description({ route, navigation }) {
   }, []);
 
   const HandleContact = () => {
-    if (!userData?.User?.Verified3) {
+     if (!userData?.User?.Verified3) {
       return Notify("Action not allowed, Verify your account to continue!");
     }
 
@@ -61,6 +61,7 @@ export default function Description({ route, navigation }) {
       return Notify("User contacted previously");
     }
     Contact(descriptorDetails?.User?._id);
+ 
   };
 
   if (Loading) {

@@ -36,12 +36,13 @@ export default function MatchListItemComponents({
           Authorization: userToken,
         },
       };
-
+console.log(itemdata.User._id);
       await axios
-        .get(`${BASE_URL}/users/other?ref=${data._id}`, config)
+        .get(`${BASE_URL}/users/other?ref=${itemdata.User._id}`, config)
         .then((res) => {
           if (res.data.Access === true && res.data.Error === false) {
             setItemdata(res.data.Data);
+            // console.log(res);
             setLoading(false);
           }
         })
@@ -60,7 +61,7 @@ export default function MatchListItemComponents({
       }
       style={[styles.container, containerStyle]}
     >
-      <Image style={styles.image} source={{ uri: itemdata?.Profile }} />
+      <Image style={styles.image} source={{ uri: itemdata?.ProfilePicture }} />
       <View style={styles.column}>
         <Text style={styles.nameText}>
           {data?.User?.Fullname ? TitleCase(itemdata?.User?.Fullname) : null}
