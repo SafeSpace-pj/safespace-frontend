@@ -351,6 +351,7 @@ const AuthProvider = ({ children }) => {
 
   // contact another user
   const Contact = async (data) => {
+    setLoading(true)
     let config = {
       headers: {
         Authorization: userToken,
@@ -361,7 +362,7 @@ const AuthProvider = ({ children }) => {
       .post(`${BASE_URL}/contact`, { ContactID: data }, config)
       .then(async (res) => {
         if (res.data.Access === true && res.data.Error !== true && res.data.Contact === true) {
-          return Notify("User contacted sucessfully");
+           Notify("User contacted sucessfully");
         }
         Notify("Complete verification!");
       })
@@ -369,6 +370,7 @@ const AuthProvider = ({ children }) => {
         Notify("Someting went wrong");
         console.error(err);
       });
+      setLoading(false)
   };
 
   // edit profile

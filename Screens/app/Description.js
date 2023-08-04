@@ -21,14 +21,14 @@ import TitleCase from "../../utils/TitleCase";
 
 export default function Description({ route, navigation }) {
   const { data } = route.params;
-  const [Loading, setLoading] = useState(true);
-  const { userToken, Notify, Contact, userData } = useContext(AuthContext);
+  const [DataLoading, setDataLoading] = useState(true);
+  const { userToken, Notify, Contact, userData, isLoading, setLoading } = useContext(AuthContext);
 
   const [descriptorDetails, setDescriptorDetails] = useState({});
 
   useEffect(() => {
     async function getData() {
-      setLoading(true);
+      setDataLoading(true);
 
       let config = {
         headers: {
@@ -41,30 +41,29 @@ export default function Description({ route, navigation }) {
         .then((res) => {
           if (res.data.Access === true && res.data.Error === false) {
             setDescriptorDetails(res.data.Data);
-            setLoading(false);
+            setDataLoading(false);
           }
         })
         .catch((err) => console.error(err));
 
-      setLoading(false);
+      setDataLoading(false);
     }
 
     getData();
   }, []);
 
-  const HandleContact = () => {
-     if (!userData?.User?.Verified3) {
+  const HandleContact = async () => {
+    if (!userData?.User?.Verified3) {
       return Notify("Action not allowed, Verify your account to continue!");
     }
 
     if (descriptorDetails?.Contacted === true) {
       return Notify("User contacted previously");
     }
-    Contact(descriptorDetails?.User?._id);
- 
+    await Contact(descriptorDetails?.User?._id);
   };
 
-  if (Loading) {
+  if (DataLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <StatusBar style="dark" />
