@@ -1,54 +1,99 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Image } from "react-native";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import TitleCase from "../utils/TitleCase";
 import formatNumberWithCommas from "../utils/formatNumberWithCommas";
+import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
+import LinearGradient from "expo-linear-gradient";
+import { AuthContext } from "../context/AuthContext";
+import { BASE_URL } from "../utils/config";
+
+const Shimmer = createShimmerPlaceholder(LinearGradient);
 
 export default function MatchListItemComponents({
   navigation,
   containerStyle,
   data,
 }) {
-  
+  const { userToken, Notify, Contact, userData } = useContext(AuthContext);
+
+  const [Loading, setLoading] = useState(true);
+
   if (data === null) {
     return <Text>Loading...</Text>;
   }
 
+  const [itemdata, setItemdata] = useState(data)
+
+  useEffect(() => {
+    async function getData() {
+      setLoading(true);
+
+      let config = {
+        headers: {
+          Authorization: userToken,
+        },
+      };
+
+      await axios
+        .get(`${BASE_URL}/users/other?ref=${data._id}`, config)
+        .then((res) => {
+          if (res.data.Access === true && res.data.Error === false) {
+            setItemdata(res.data.Data);
+            setLoading(false);
+          }
+        })
+        .catch((err) => console.error(err));
+
+      setLoading(false);
+    }
+
+    getData();
+  }, []);
+
   return (
-    <Pressable
-      onPress={() =>
-        navigation.navigate("Description", { data: data?.User?._id })
-      }
-      style={[styles.container, containerStyle]}
-    >
-      <Image style={styles.image} source={{ uri: data?.Profile }} />
-      <View style={styles.column}>
-        <Text style={styles.nameText}>
-          {data?.User?.Fullname ? TitleCase(data?.User?.Fullname) : null}
-        </Text>
-        <Text style={styles.text}>
-          ₦ {data?.OtherDetails?.RentBudget ? formatNumberWithCommas(data?.OtherDetails?.RentBudget) : null} / <Text style={styles.textInner}>per year</Text>
-        </Text>
-        <View style={styles.rowContainer}>
-          <View style={styles.row}>
-            <Ionicons name="location-sharp" size={14} color="#7472E0" />
-            <Text style={styles.rowText}>Asokoro, {data?.OtherDetails?.State}</Text>
-          </View>
-          <View style={styles.row}>
-            <Entypo
-              name="dot-single"
-              size={24}
-              color={data?.User?.Visible ? "#2DD35C" : "#FD3131"}
-            />
-            <Text style={styles.rowText}>
-              {data?.User?.Visible ? "Available" : "Unvailable"}
-            </Text>
+    <Shimmer visible={Loading}>
+      <Pressable
+        onPress={() =>
+          navigation.navigate("Description", { data: itemdata?.User?._id })
+        }
+        style={[styles.container, containerStyle]}
+      >
+        <Image style={styles.image} source={{ uri: itemdata?.Profile }} />
+        <View style={styles.column}>
+          <Text style={styles.nameText}>
+            {data?.User?.Fullname ? TitleCase(itemdata?.User?.Fullname) : null}
+          </Text>
+          <Text style={styles.text}>
+            ₦{" "}
+            {itemdata?.OtherDetails?.RentBudget
+              ? formatNumberWithCommas(itemdata?.OtherDetails?.RentBudget)
+              : null}{" "}
+            / <Text style={styles.textInner}>per year</Text>
+          </Text>
+          <View style={styles.rowContainer}>
+            <View style={styles.row}>
+              <Ionicons name="location-sharp" size={14} color="#7472E0" />
+              <Text style={styles.rowText}>
+                {itemdata?.OtherDetails?.State}
+              </Text>
+            </View>
+            <View style={styles.row}>
+              <Entypo
+                name="dot-single"
+                size={24}
+                color={itemdata?.User?.Visible ? "#2DD35C" : "#FD3131"}
+              />
+              <Text style={styles.rowText}>
+                {itemdata?.User?.Visible ? "Available" : "Unvailable"}
+              </Text>
+            </View>
           </View>
         </View>
-      </View>
-    </Pressable>
+      </Pressable>
+    </Shimmer>
   );
 }
 
