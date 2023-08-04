@@ -149,7 +149,9 @@ export default function Home({ navigation }) {
           />
         ) : null}
         {/* Show other user after matched users */}
-        <>
+
+      
+        
           {/* Banner to show that they arent a match */}
           {/* <KYCBannercomponents
               navigator={() =>
@@ -179,7 +181,6 @@ export default function Home({ navigation }) {
               }}
               keyExtractor={(item) => item?.User?._id}
             /> */}
-        </>
       </View>
     </View>
   );
