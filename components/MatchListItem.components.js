@@ -5,12 +5,12 @@ import { Image } from "react-native";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import TitleCase from "../utils/TitleCase";
 import formatNumberWithCommas from "../utils/formatNumberWithCommas";
-import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
-import LinearGradient from "expo-linear-gradient";
+// import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
+// import LinearGradient from "expo-linear-gradient";
 import { AuthContext } from "../context/AuthContext";
 import { BASE_URL } from "../utils/config";
 
-const Shimmer = createShimmerPlaceholder(LinearGradient);
+// const Shimmer = createShimmerPlaceholder(LinearGradient);
 
 export default function MatchListItemComponents({
   navigation,
@@ -25,7 +25,7 @@ export default function MatchListItemComponents({
     return <Text>Loading...</Text>;
   }
 
-  const [itemdata, setItemdata] = useState(data)
+  const [itemdata, setItemdata] = useState(data);
 
   useEffect(() => {
     async function getData() {
@@ -54,46 +54,42 @@ export default function MatchListItemComponents({
   }, []);
 
   return (
-    <Shimmer visible={Loading}>
-      <Pressable
-        onPress={() =>
-          navigation.navigate("Description", { data: itemdata?.User?._id })
-        }
-        style={[styles.container, containerStyle]}
-      >
-        <Image style={styles.image} source={{ uri: itemdata?.Profile }} />
-        <View style={styles.column}>
-          <Text style={styles.nameText}>
-            {data?.User?.Fullname ? TitleCase(itemdata?.User?.Fullname) : null}
-          </Text>
-          <Text style={styles.text}>
-            ₦{" "}
-            {itemdata?.OtherDetails?.RentBudget
-              ? formatNumberWithCommas(itemdata?.OtherDetails?.RentBudget)
-              : null}{" "}
-            / <Text style={styles.textInner}>per year</Text>
-          </Text>
-          <View style={styles.rowContainer}>
-            <View style={styles.row}>
-              <Ionicons name="location-sharp" size={14} color="#7472E0" />
-              <Text style={styles.rowText}>
-                {itemdata?.OtherDetails?.State}
-              </Text>
-            </View>
-            <View style={styles.row}>
-              <Entypo
-                name="dot-single"
-                size={24}
-                color={itemdata?.User?.Visible ? "#2DD35C" : "#FD3131"}
-              />
-              <Text style={styles.rowText}>
-                {itemdata?.User?.Visible ? "Available" : "Unvailable"}
-              </Text>
-            </View>
+    <Pressable
+      onPress={() =>
+        navigation.navigate("Description", { data: itemdata?.User?._id })
+      }
+      style={[styles.container, containerStyle]}
+    >
+      <Image style={styles.image} source={{ uri: itemdata?.Profile }} />
+      <View style={styles.column}>
+        <Text style={styles.nameText}>
+          {data?.User?.Fullname ? TitleCase(itemdata?.User?.Fullname) : null}
+        </Text>
+        <Text style={styles.text}>
+          ₦{" "}
+          {itemdata?.OtherDetails?.RentBudget
+            ? formatNumberWithCommas(itemdata?.OtherDetails?.RentBudget)
+            : null}{" "}
+          / <Text style={styles.textInner}>per year</Text>
+        </Text>
+        <View style={styles.rowContainer}>
+          <View style={styles.row}>
+            <Ionicons name="location-sharp" size={14} color="#7472E0" />
+            <Text style={styles.rowText}>{itemdata?.OtherDetails?.State}</Text>
+          </View>
+          <View style={styles.row}>
+            <Entypo
+              name="dot-single"
+              size={24}
+              color={itemdata?.User?.Visible ? "#2DD35C" : "#FD3131"}
+            />
+            <Text style={styles.rowText}>
+              {itemdata?.User?.Visible ? "Available" : "Unvailable"}
+            </Text>
           </View>
         </View>
-      </Pressable>
-    </Shimmer>
+      </View>
+    </Pressable>
   );
 }
 

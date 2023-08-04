@@ -153,7 +153,10 @@ export default function Page1({ navigation }) {
             <TextInput
               placeholder="Bio"
               placeholderTextColor="black"
-              style={[styles.placeholderStyle, { textAlignVertical: "top", paddingVertical: 10, flex: 1 }]}
+              style={[
+                styles.placeholderStyle,
+                { textAlignVertical: "top", paddingVertical: 10, flex: 1 },
+              ]}
               cursorColor="black"
               value={bio}
               onChangeText={(val) => setBio(val)}
@@ -177,7 +180,8 @@ export default function Page1({ navigation }) {
           {/* State dropdown */}
           <DropdownElement
             data={[
-              { label: "Abia", value: "Abia" },{ label: "Abuja", value: "Abuja" },
+              { label: "Abia", value: "Abia" },
+              { label: "Abuja", value: "Abuja" },
               { label: "Adamawa", value: "Adamawa" },
               { label: "Akwa Ibom", value: "Akwa Ibom" },
               { label: "Anambra", value: "Anambra" },

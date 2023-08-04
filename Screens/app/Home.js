@@ -38,8 +38,7 @@ export default function Home({ navigation }) {
         .then(async (res) => {
           if (res.data.Access === true && res.data.Error === false) {
             await setData(res.data.Data);
-
-            await axios
+                       await axios
               .get(`${BASE_URL}/users/all`, config)
               .then(async (res) => {
                 if (res.data.Access === true && res.data.Error === false) {
@@ -112,7 +111,6 @@ export default function Home({ navigation }) {
       </View>
       <View style={[AppStyles.body, { flex: 1, overflow: "visible" }]}>
         <Text style={AppStyles.heading}>Possible Matches</Text>
-
         {/* KYC banner */}
         {userData?.User.Verified2 !== true ? (
           <KYCBannercomponents
@@ -123,7 +121,6 @@ export default function Home({ navigation }) {
             }
           />
         ) : null}
-
         {/* flatlist of users */}
         {loadingData === true ? (
           <View
@@ -151,19 +148,17 @@ export default function Home({ navigation }) {
             keyExtractor={(item) => item?.User?._id}
           />
         ) : null}
-
-        {/* Show other user after matched users */}
-        (
-          <>
+        {/* Show other user after matched users */}(
+        <>
           {/* Banner to show that they arent a match */}
-            {/* <KYCBannercomponents
+          {/* <KYCBannercomponents
               navigator={() =>
                 navigation.navigate("VerificationStack", {
                   screen: "Page1",
                 })
               }
             /> */}
-            {/* <FlatList
+          {/* <FlatList
               refreshControl={
                 <RefreshControl
                   refreshing={loadingData}
@@ -184,7 +179,7 @@ export default function Home({ navigation }) {
               }}
               keyExtractor={(item) => item?.User?._id}
             /> */}
-          </>
+        </>
         )
       </View>
     </View>
