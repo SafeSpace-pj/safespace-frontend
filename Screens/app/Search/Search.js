@@ -46,7 +46,7 @@ export default function Search({ route, navigation }) {
             <SearchSelectComponent
               iconName="location-sharp"
               data={[
-                { label: "Abia", value: "Abia" },
+                { label: "Abia", value: "Abia" },{ label: "Abuja", value: "Abuja" },
                 { label: "Adamawa", value: "Adamawa" },
                 { label: "Akwa Ibom", value: "Akwa Ibom" },
                 { label: "Anambra", value: "Anambra" },
@@ -85,7 +85,7 @@ export default function Search({ route, navigation }) {
               ]}
               name="Residence location"
               setValue={(val) => setFormState(val)}
-              value={`${formState !== "" || null ? `${formState} state` : formState}`}
+              value={formState}
             />
             {/* <SearchSelectComponent
               iconName="pricetag"
