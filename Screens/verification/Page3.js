@@ -1,15 +1,15 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React, { useContext, useState } from 'react'
-import { AuthContext } from '../../context/AuthContext';
-import AppStyles from '../../styles/AppStyles';
-import { Ionicons } from '@expo/vector-icons';
-import { Pressable } from 'react-native';
-import { ScrollView } from 'react-native';
-import { TextInput } from 'react-native-paper';
-import { TouchableOpacity } from 'react-native';
-import FormsStyles from '../../styles/Forms.styles';
-import DropdownElement from '../../components/DropdownElement.components';
-import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View } from "react-native";
+import React, { useContext, useState } from "react";
+import { AuthContext } from "../../context/AuthContext";
+import AppStyles from "../../styles/AppStyles";
+import { Ionicons } from "@expo/vector-icons";
+import { Pressable } from "react-native";
+import { ScrollView } from "react-native";
+import { TextInput } from "react-native-paper";
+import { TouchableOpacity } from "react-native";
+import FormsStyles from "../../styles/Forms.styles";
+import DropdownElement from "../../components/DropdownElement.components";
+import { StatusBar } from "expo-status-bar";
 
 export default function Page3({ route, navigation }) {
   const { Notify } = useContext(AuthContext);
@@ -28,14 +28,20 @@ export default function Page3({ route, navigation }) {
     location,
   } = route.params;
 
-  const [house, setHouse] = useState("")
-  const [houseState, setHouseState] = useState("")
-  const [roomieOccupation, setRoomieOccupation] = useState("")
-  const [roomieIncome, setRoomieIncome] = useState("")
-  const [roomieGender, setRoomieGender] = useState("")
+  const [house, setHouse] = useState("");
+  const [houseState, setHouseState] = useState("");
+  const [roomieOccupation, setRoomieOccupation] = useState("");
+  const [roomieIncome, setRoomieIncome] = useState("");
+  const [roomieGender, setRoomieGender] = useState("");
 
   const ButtonAction = () => {
-    if (!house || !houseState || !roomieOccupation || !roomieIncome || !roomieGender) {
+    if (
+      !house ||
+      !houseState ||
+      !roomieOccupation ||
+      !roomieIncome ||
+      !roomieGender
+    ) {
       return Notify("Fill form acordingly");
     }
     navigation.replace("Page4", {
@@ -56,8 +62,7 @@ export default function Page3({ route, navigation }) {
       roomieIncome: roomieIncome,
       roomieGender: roomieGender,
     });
-  }
-
+  };
 
   return (
     <View style={styles.container}>
@@ -108,7 +113,9 @@ export default function Page3({ route, navigation }) {
       {/* body */}
       <View style={{ flex: 1, paddingTop: 24 }}>
         <View style={{ paddingHorizontal: 24 }}>
-          <Text style={{ fontFamily: "Poppins_500Medium", fontSize: 15 }}>Your Roomie Preferences</Text>
+          <Text style={{ fontFamily: "Poppins_500Medium", fontSize: 15 }}>
+            Your Roomie Preferences
+          </Text>
         </View>
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -117,7 +124,6 @@ export default function Page3({ route, navigation }) {
           style={{ flex: 1 }}
           contentContainerStyle={{ gap: 12, padding: 24 }}
         >
-
           {/* House type */}
           <DropdownElement
             data={[
@@ -231,7 +237,6 @@ export default function Page3({ route, navigation }) {
               3/4 NEXT
             </Text>
           </TouchableOpacity>
-
         </ScrollView>
       </View>
     </View>
@@ -256,4 +261,3 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_400Regular",
   },
 });
-
