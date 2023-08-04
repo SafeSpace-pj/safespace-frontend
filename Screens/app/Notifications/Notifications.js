@@ -1,4 +1,11 @@
-import { ActivityIndicator, FlatList, RefreshControl, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -10,8 +17,7 @@ import axios from "axios";
 import { BASE_URL } from "../../../utils/config";
 
 export default function Notifications({ navigation }) {
-  const { userData, userToken, getUserData } =
-    useContext(AuthContext);
+  const { userData, userToken, getUserData } = useContext(AuthContext);
 
   const [Loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
@@ -20,14 +26,6 @@ export default function Notifications({ navigation }) {
   useEffect(() => {
     getUserData();
   }, []);
-
-  if (userData === null) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator color="#7472E0" size="small" />
-      </View>
-    );
-  }
 
   const onRefresh = React.useCallback(() => {
     setLoading(true);
@@ -43,7 +41,13 @@ export default function Notifications({ navigation }) {
         .get(`${BASE_URL}/users/all/notification`, config)
         .then((res) => {
           if (res.data.Access === true && res.data.Error === false) {
-            setData(res.data.Notifications);
+            // Assuming res.data.Notifications is an array of objects with a property to sort by (e.g., "date")
+            const sortedData = res.data.Notifications.sort((a, b) => {
+              // Replace "date" with the property you want to sort by
+              return new Date(a.createdAt) - new Date(b.createdAt);
+            });
+
+            setData(sortedData);
           }
         })
         .catch((err) => console.error(err));
@@ -55,7 +59,7 @@ export default function Notifications({ navigation }) {
   }, []);
 
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     async function getData() {
       let config = {
         headers: {
@@ -67,15 +71,29 @@ export default function Notifications({ navigation }) {
         .get(`${BASE_URL}/users/all/notification`, config)
         .then((res) => {
           if (res.data.Access === true && res.data.Error === false) {
-            setData(res.data.Notifications);
+            // Assuming res.data.Notifications is an array of objects with a property to sort by (e.g., "date")
+            const sortedData = res.data.Notifications.sort((a, b) => {
+              // Replace "date" with the property you want to sort by
+              return new Date(a.createdAt) - new Date(b.createdAt);
+            });
+
+            setData(sortedData);
           }
         })
         .catch((err) => console.error(err));
     }
 
     getData();
-    setLoading(false)
+    setLoading(false);
   }, []);
+
+  if (userData === null || Loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator color="#7472E0" size="small" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -123,7 +141,14 @@ export default function Notifications({ navigation }) {
       </View>
 
       {/* body */}
-      <View style={{ flex: 1, padding: 24 }}>
+      <View
+        style={{
+          flex: 1,
+          padding: 24,
+          paddingBottom: 0,
+          backgroundColor: "#ffffff",
+        }}
+      >
         <View
           style={{
             flexDirection: "row",
@@ -148,9 +173,9 @@ export default function Notifications({ navigation }) {
           </Pressable>
         </View>
         <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           showsVerticalScrollIndicator={false}
           bounces={true}
           alwaysBounceVertical={true}
@@ -158,36 +183,44 @@ export default function Notifications({ navigation }) {
           contentContainerStyle={{ gap: 12 }}
         >
           {Loading === true ? (
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <ActivityIndicator size="small" color="#7472E0" />
-              </View>
-            ) : data === [] ? (
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Text>No Notifications</Text>
-              </View>
-            ) : (
-              <FlatList
-                scrollEnabled={false}
-                style={{ flex: 1 }}
-                data={data}
-                renderItem={({ item }) => {
-                  return <NotificationsItem {...item} onPress={()=>navigation.navigate("Notification", {...item})} />
-                }}
-                keyExtractor={(item) => item._id}
-              />
-            )}
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                overflow: "visible",
+              }}
+            >
+              <ActivityIndicator size="small" color="#7472E0" />
+            </View>
+          ) : data === [] ? (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text>No Notifications</Text>
+            </View>
+          ) : (
+            <FlatList
+              scrollEnabled={false}
+              style={{ flex: 1 }}
+              data={data}
+              renderItem={({ item }) => {
+                return (
+                  <NotificationsItem
+                    {...item}
+                    onPress={() =>
+                      navigation.navigate("Notification", { ...item })
+                    }
+                  />
+                );
+              }}
+              keyExtractor={(item) => item._id}
+            />
+          )}
         </ScrollView>
       </View>
     </View>
