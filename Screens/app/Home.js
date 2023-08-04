@@ -1,4 +1,10 @@
-import { Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
+import {
+  Pressable,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import AppStyles from "../../styles/AppStyles";
@@ -14,6 +20,7 @@ export default function Home({ navigation }) {
   const { Logout, isLoading, userToken, userData } = useContext(AuthContext);
 
   const [data, setData] = useState([]);
+  const [unMatched, setUnmatched] = useState([]);
   const [loadingData, setLoadingData] = useState(true);
 
   useEffect(() => {
@@ -27,16 +34,31 @@ export default function Home({ navigation }) {
       };
 
       await axios
-        .get(`${BASE_URL}/users/all`, config)
-        .then((res) => {
+        .get(`${BASE_URL}/users/personalizeduser`, config)
+        .then(async (res) => {
           if (res.data.Access === true && res.data.Error === false) {
-            return setData(res.data.Data);
+            await setData(res.data.Data);
+
+            await axios
+              .get(`${BASE_URL}/users/all`, config)
+              .then(async (res) => {
+                if (res.data.Access === true && res.data.Error === false) {
+                  // Filter list B and remove users that appear in list A
+                  const filteredListB = await res.data.Data.filter((itemB) => {
+                    // Check if the User._id exists in list A
+                    return !data.some(
+                      (itemA) => itemA.User._id === itemB.User._id
+                    );
+                  });
+                  setUnmatched(filteredListB);
+                }
+              });
+
+            setLoadingData(false);
           }
         });
+    }
 
-      setLoadingData(false);
-    };
-    
     getData();
     setLoadingData(false);
   }, []);
@@ -52,16 +74,32 @@ export default function Home({ navigation }) {
       };
 
       await axios
-        .get(`${BASE_URL}/users/all`, config)
-        .then((res) => {
+        .get(`${BASE_URL}/users/personalizeduser`, config)
+        .then(async (res) => {
           if (res.data.Access === true && res.data.Error === false) {
-            return setData(res.data.Data);
+            await setData(res.data.Data);
+
+            await axios
+              .get(`${BASE_URL}/users/all`, config)
+              .then(async (res) => {
+                if (res.data.Access === true && res.data.Error === false) {
+                  // Filter list B and remove users that appear in list A
+                  const filteredListB = await res.data.Data.filter((itemB) => {
+                    // Check if the User._id exists in list A
+                    return !data.some(
+                      (itemA) => itemA.User._id === itemB.User._id
+                    );
+                  });
+                  setUnmatched(filteredListB);
+                }
+              });
+
+            setLoadingData(false);
+            console.log(loadingData);
           }
         });
-
-      setLoadingData(false);
     };
-    
+
     getData();
   }, []);
 
@@ -77,14 +115,14 @@ export default function Home({ navigation }) {
 
         {/* KYC banner */}
         {userData?.User.Verified2 !== true ? (
-            <KYCBannercomponents
-              navigator={() =>
-                navigation.navigate("VerificationStack", {
-                  screen: "Page1",
-                })
-              }
-            />
-          ) : null}
+          <KYCBannercomponents
+            navigator={() =>
+              navigation.navigate("VerificationStack", {
+                screen: "Page1",
+              })
+            }
+          />
+        ) : null}
 
         {/* flatlist of users */}
         {loadingData === true ? (
@@ -93,28 +131,61 @@ export default function Home({ navigation }) {
           >
             <ActivityIndicator size="small" color="#7472E0" />
           </View>
-        ) : (
+        ) : data !== [] ? (
           <FlatList
-          refreshControl={
-            <RefreshControl refreshing={loadingData} onRefresh={onRefresh} />
-          }
+            refreshControl={
+              <RefreshControl refreshing={loadingData} onRefresh={onRefresh} />
+            }
             scrollEnabled={true}
-            style={{ flex: 1 }}
             data={data}
+            style={{ flex: 1 }}
             renderItem={({ item }) => {
-              return (<MatchListItemComponents
-                containerStyle={{ marginVertical: 10, overflow: "visible" }}
-                navigation={navigation}
-                data={item}
-              />)
+              return (
+                <MatchListItemComponents
+                  containerStyle={{ marginVertical: 10, overflow: "visible" }}
+                  navigation={navigation}
+                  data={item}
+                />
+              );
             }}
             keyExtractor={(item) => item?.User?._id}
           />
-        )}
+        ) : null}
 
-
-
-        {/* go to search */}
+        {/* Show other user after matched users */}
+        (
+          <>
+          {/* Banner to show that they arent a match */}
+            {/* <KYCBannercomponents
+              navigator={() =>
+                navigation.navigate("VerificationStack", {
+                  screen: "Page1",
+                })
+              }
+            /> */}
+            {/* <FlatList
+              refreshControl={
+                <RefreshControl
+                  refreshing={loadingData}
+                  onRefresh={onRefresh}
+                />
+              }
+              scrollEnabled={true}
+              data={unMatched}
+              style={{ flex: 1 }}
+              renderItem={({ item }) => {
+                return (
+                  <MatchListItemComponents
+                    containerStyle={{ marginVertical: 10, overflow: "visible" }}
+                    navigation={navigation}
+                    data={item}
+                  />
+                );
+              }}
+              keyExtractor={(item) => item?.User?._id}
+            /> */}
+          </>
+        )
       </View>
     </View>
   );

@@ -334,7 +334,7 @@ const AuthProvider = ({ children }) => {
               setUserData(res.data.Data);
             }
           });
-          return Notify("Congtatulations, KYC completed sucessfully");
+          return Notify("Congtatulations, KYC updated sucessfully, waiting for approval!");
         }
         Notify(res.data.Error);
       })
